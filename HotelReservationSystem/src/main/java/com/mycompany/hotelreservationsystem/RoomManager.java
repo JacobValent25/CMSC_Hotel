@@ -11,7 +11,7 @@ import java.sql.Date;
  *
  * @author Emmanuel Girin
  * Project: Hotel Reservation System
- * Date: 06/23/2020
+ * Date: 06/25/2020
  * Description: Class performs available Room Look Ups for hotel reservations
  *              query and update database of Room Records
  */
@@ -24,6 +24,7 @@ class RoomManager {
     
     
     /**
+     * Created By Emmanuel Girin 6/25
      * Query Database Room Records to see if number and type of rooms are available
      * during the date range.
      * @throws ExceedsCapacityException
@@ -34,6 +35,7 @@ class RoomManager {
     }
     
     /**
+     * Created by Emmanuel Girin 6/25
      * Looks up room in database room Records by unique key room ID
      * @param roomID
      * @throws databaseLookUpException 
@@ -43,7 +45,7 @@ class RoomManager {
     }
     
     /**
-     * 
+     * Created by Emmanuel Girin 6/25
      * @return array of rooms available rooms
      */
     Room[] getAvailableRooms(){
@@ -51,6 +53,7 @@ class RoomManager {
     }
     
     /**
+     * Created by Emmanuel Girin 6/25
      * Takes the first available rooms based on # needed retrieves roomID
      * adds the room IDs in an array and returns that array
      * @return int array of room IDs

@@ -9,17 +9,18 @@ package com.mycompany.hotelreservationsystem;
  * 
  * @author Emmanuel Girin
  * Project: Hotel Reservation System
- * Date: 06/23/2020
+ * Date Created: 06/25/2020
  * Description: Class queries database to verify employee login and password
  * 
  */
+
 class Login {
     //data
     private String message = "";
     
     
     /**
-     * 
+     * Emmanuel Girin created 6/25
      * @param id
      * @param pass
      * Queries Database to validate userID and password
@@ -31,6 +32,7 @@ class Login {
     }
     
     /**
+     * Emmanuel Girin created 6/25
      * @return message is returned for any invalid usernames or passwords 
      */
     String getMessage(){

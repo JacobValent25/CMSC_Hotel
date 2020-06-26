@@ -7,7 +7,12 @@ package com.mycompany.hotelreservationsystem;
 
 /**
  *
- * @author HallogenicX
+ * @author Emmanuel Girin
+ * Project: Hotel Reservation System
+ * Date: 06/25/2020
+ * Description: Class, which handles the error when the number of hotel rooms
+ *              needed for reservation exceeds the number of rooms in the hotel
+ * 
  */
 class ExceedsCapacityException extends Exception {
     

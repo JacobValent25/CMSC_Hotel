@@ -24,6 +24,7 @@ class ReservationManager {
     //methods
     
     /**
+     * Created by Emmanuel Girin 6/25 - basic structure
      * Create a new Reservation Object with data
      * Set the current Reservation to this new object
      * @param checkIn
@@ -36,6 +37,7 @@ class ReservationManager {
     }
     
     /**
+     * Created by Emmanuel Girin 6/25 - basic structure
      * Updates the database Reservation records 
      * with the finalized reservation details
      */
@@ -44,6 +46,7 @@ class ReservationManager {
     }
     
     /**
+     * Created by Emmanuel Girin 6/25 - basic structure
      * Query database for reservation delete row if found else
      * Throw an exception if database cannot find the current reservation
      * @throws databaseLookUpException 
@@ -54,6 +57,7 @@ class ReservationManager {
     
     
     /**
+     * Created by Emmanuel Girin 6/25 - basic structure
      * Look up existing reservation in database 
      * create new reservation object if found 
      * @param customerID
@@ -64,6 +68,7 @@ class ReservationManager {
     }
     
     /**
+     * Created by Emmanuel Girin 6/25 - basic structure
      * Look up existing reservation in database 
      * create new reservation object if found 
      * @param reservationNumber 
@@ -73,7 +78,7 @@ class ReservationManager {
     }
     
     /**
-     * 
+     *Created by Emmanuel Girin 6/25
      * @return currentReservation object
      */
     public Reservation getCurrentReservation() {

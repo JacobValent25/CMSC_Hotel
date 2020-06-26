@@ -18,6 +18,7 @@ class CustomerManager {
     Customer currentCustomer;
     
     /**
+     * Created by Emmanuel Girin 6/25 - basic structure
      * Creates a new Customer Object with a passed array of strings
      * Create new Customer in Database Customer Records
      * Retrieves Unique Customer ID from records to update Customer Object
@@ -28,6 +29,7 @@ class CustomerManager {
     }
     
     /**
+     * Created by Emmanuel Girin 6/25 - basic structure
      * Connects to Database to retrieve Customer by name return true if found
      * @param firstName
      * @param lastName
@@ -39,6 +41,7 @@ class CustomerManager {
     }
     
     /**
+     * Created by Emmanuel Girin 6/25 - basic structure
      * Connects to Database to retrieve Customer by phone return true if found
      * @param phoneNumber
      * @return Default is false, true if look up is found
@@ -49,6 +52,7 @@ class CustomerManager {
     }
     
     /**
+     * Created by Emmanuel Girin 6/25 - basic structure
      * Connects to Database to retrieve Customer by email return true if found
      * @param email
      * @return Default is false, true if look up is found

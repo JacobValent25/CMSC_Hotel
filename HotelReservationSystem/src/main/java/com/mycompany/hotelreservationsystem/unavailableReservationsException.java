@@ -7,7 +7,12 @@ package com.mycompany.hotelreservationsystem;
 
 /**
  *
- * @author HallogenicX
+ * @author Emmanuel Girin
+ * Project: Hotel Reservation System
+ * Date: 06/25/2020
+ * Description: Class, which handles when there are no rooms available for a 
+ *              reservation
+ * 
  */
 class unavailableReservationsException extends Exception {
     

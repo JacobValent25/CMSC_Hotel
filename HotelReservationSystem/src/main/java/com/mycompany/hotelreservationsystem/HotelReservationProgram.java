@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 
 /**
  *
- * @author Group 1 Members: Emmanuel Girin, Jacob Valentine
+ * @author Emmanuel Girin created overall structure
  * @date: 6/25/2020
  * 
  * This class  calls the main function for the program,
@@ -20,6 +20,11 @@ import javax.swing.JPanel;
  * reservation system. It also establishes a connection to a local SQLite
  * database. 
  */
+
+/**
+ * Created by Emmanuel Girin 6/25 - basic structure added methods, some data values
+ */
+
 public class HotelReservationProgram {
     //GUI data members
     Frame frame;
@@ -35,6 +40,7 @@ public class HotelReservationProgram {
     int  LogonAttemps = 0;
 
     /**
+     * Created by Emmanuel Girin 6/25 - basic structure
      * @param args the command line arguments
      */
     public static void main(String[] args) {
@@ -45,6 +51,7 @@ public class HotelReservationProgram {
     
     
     /**
+     * Created by Emmanuel Girin 6/25 - basic structure
      * Connects to the local SQL database on client machine
      * Catches and handles a database connection error
      */
@@ -54,6 +61,7 @@ public class HotelReservationProgram {
     
    
     /**
+     * Created by Emmanuel Girin 6/25 - basic structure
      * Display Login GUI prompting user for ID and Password
      * Validate Credentials
      */
@@ -67,6 +75,7 @@ public class HotelReservationProgram {
     }
     
     /**
+     * Created by Emmanuel Girin 6/25 - basic structure
      * @param
      * Displays GUI to choose from new Customer or Existing Customer
      * User Navigates to next Screen based on choice
@@ -80,6 +89,7 @@ public class HotelReservationProgram {
     }
     
     /**
+     * Created by Emmanuel Girin 6/25 - basic structure
      * Display new customer form to get customer info
      * Stores value into a string array
      * calls method contained in CustomerManager class
@@ -93,6 +103,7 @@ public class HotelReservationProgram {
     }
     
     /**
+     * Created by Emmanuel Girin 6/25 - basic structure
      * Asks User for data to lookup a Customer
      * User chooses button to perform look up by phone, name, email
      * Look up is performed to retrieve Customer Data
@@ -105,6 +116,7 @@ public class HotelReservationProgram {
     }
     
     /**
+     * Created by Emmanuel Girin 6/25 - basic structure
      * Displays 2 Buttons to User
      * User chooses to select an existing reservation
      * or a create new reservation.
@@ -119,6 +131,7 @@ public class HotelReservationProgram {
     }
     
     /**
+     * Created by Emmanuel Girin 6/25 - basic structure
      * GUI is updated to display choice to User
      * User Selects buttons to LookUpReservation by name or by Number
      * calls corresponding ReservationManager lookup method
@@ -131,6 +144,7 @@ public class HotelReservationProgram {
     }
     
     /**
+     * Created by Emmanuel Girin 6/25 - basic structure
      * Updates GUI to Display Existing Reservation Data to User
      * Provides Choice with Buttons to Modify Existing, Delete Existing, Cancel
      * calls corresponding method based on choice
@@ -143,6 +157,7 @@ public class HotelReservationProgram {
     }
     
     /**
+     * Created by Emmanuel Girin 6/25 - basic structure
      * GUI is updated to capture new Reservation data
      * data is stored and used to call RoomManager search for available rooms
      * if rooms are found brings user to the finalize Reservation GUI
@@ -161,6 +176,7 @@ public class HotelReservationProgram {
     }
 
     /**
+     * Created by Emmanuel Girin 6/25 - basic structure
      * GUI is updated to display Reservation Data
      * User chooses to finalize the reservation or cancel through buttons
      * Methods are called based on choice

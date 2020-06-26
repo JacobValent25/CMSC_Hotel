@@ -25,6 +25,7 @@ public class Customer {
     private Date dateOfBirth;
 
     
+    //All getter and setter methods created by Emmanuel Girin 6/25
     //Getter and Setter Methods for Customer Data
     public int getCustomerID() {
         return customerID;

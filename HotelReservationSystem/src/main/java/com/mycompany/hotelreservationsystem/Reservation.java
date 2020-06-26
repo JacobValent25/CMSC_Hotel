@@ -11,12 +11,14 @@ import java.sql.Date;
  *
  * @author Emmanuel Girin
  * Project: Hotel Reservation System
- * Date: 06/23/2020
+ * Date: 06/25/2020
  * Description: Class holds data for new or existing reservations.
  *              This data can be displayed or retrieved to be updated
  *              to a database
  * 
  */
+
+//Created by Emmanuel Girin: 6/25
 public class Reservation {
     //Reservation data
     private int reservationID, customerID, numOfGuests;
@@ -29,6 +31,7 @@ public class Reservation {
     
    
     /**
+     * Created: Emmanuel Girin 6/25
      * Returns a string of the reservation Data
      */
      @Override
@@ -36,7 +39,11 @@ public class Reservation {
         return "Reservation{" + "reservationID=" + reservationID + ", customerID=" + customerID + ", numOfGuests=" + numOfGuests + ", totalCost=" + totalCost + ", roomIDs=" + roomIDs + ", checkIn=" + checkIn + ", checkOut=" + checkOut + ", taxRate=" + taxRate + '}';
     }
     
-    //get Methods for reservation Data
+    /**
+     * Created all get Methods: Emmanuel Girin 6/25
+     * get Methods for reservation Data
+     * 
+     */
     public int getReservationID() {
         return reservationID;
     }

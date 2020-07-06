@@ -71,6 +71,7 @@ class CustomerManager {
     
     /**
      * Created by Emmanuel Girin 6/25 - basic structure
+     * Modified 7/6 by EG to add body of method
      * Connects to Database to retrieve Customer by name return true if found
      * @param firstName
      * @param lastName
@@ -78,7 +79,7 @@ class CustomerManager {
      * 
      */
     boolean lookUpCustomerByName(String firstName, String lastName) throws SQLException{
-        
+        boolean dataFound = false;
         //open connection to database
         dBase.connectDatabase();
         
@@ -112,23 +113,27 @@ class CustomerManager {
                 //create new customer
                 currentCustomer = new Customer(custData);
                 
-                //return true to calling method to show that a customer was found
-                return true;
+                
+                //set Flag to True
+                dataFound = true;
         }
         
-        else
-            return false;
+        dBase.closeConnection();
+        
+        return dataFound;
     }
     
     /**
      * Created by Emmanuel Girin 6/25 - basic structure
+     * Modified 7/6 by EG to add body of method
      * Connects to Database to retrieve Customer by phone return true if found
      * @param phoneNumber
      * @return Default is false, true if look up is found
      * 
      */
     boolean lookUpCustomerByPhone(String phoneNumber) throws SQLException{
-                
+        boolean dataFound = false;
+        
         //open connection to database
         dBase.connectDatabase();
         
@@ -160,23 +165,27 @@ class CustomerManager {
                 
                 //create new customer
                 currentCustomer = new Customer(custData);
-                
-                //return true to calling method to show that a customer was found
-                return true;
+
+                //set Flag to True
+                dataFound = true;
         }
-        else
-                return false;
+        
+        dBase.closeConnection();
+        
+        return dataFound;
     }
     
     /**
      * Created by Emmanuel Girin 6/25 - basic structure
+     * Modified 7/6 by EG to add body of method
      * Connects to Database to retrieve Customer by email return true if found
      * @param email
      * @return Default is false, true if look up is found
      * 
      */
     boolean lookUpCustomerByName(String email) throws SQLException{
-            
+        boolean dataFound = false;
+        
         //open connection to database
         dBase.connectDatabase();
         
@@ -209,10 +218,12 @@ class CustomerManager {
                 //create new customer
                 currentCustomer = new Customer(custData);
                 
-                //return true to calling method to show that a customer was found
-                return true;
+                //set Flag to True
+                dataFound = true;
         }
-        else
-                return false;
+        
+        dBase.closeConnection();
+        
+        return dataFound;
     }
 }

@@ -70,6 +70,21 @@ public class Customer {
         
     }
     
+    
+    /**
+     * Created by: EG
+     * Date: 7/6
+     * @return Data values of Customer Object minus customerID
+     */
+    @Override
+    public String toString() {
+        return "Customer{" + "firstName=" + firstName + ", lastName=" + lastName 
+                + ", street=" + street + ", city=" + city + ", state=" + state 
+                + ", country=" + country + ", phone=" + phone + ", email=" 
+                + email + ", dateOfBirth=" + dateOfBirth + '}';
+    }
+   
+    
     //All getter and setter methods created by Emmanuel Girin 6/25
     //Getter and Setter Methods for Customer Data
     public int getCustomerID() {

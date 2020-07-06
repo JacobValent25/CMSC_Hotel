@@ -4,26 +4,71 @@
  * and open the template in the editor.
  */
 package com.mycompany.hotelreservationsystem;
-
 import java.sql.Date;
+
+
+
 
 /**
  *
  * @author Emmanuel Girin
  * Project: Hotel Reservation System
  * Date: 06/23/2020
+ * Modified: 7/6 by EG added constructors, initialized values, and finished class, get / set methods
  * Description: Class holds data for new or existing reservations.
  *              This data can be displayed or retrieved to be 
  *              updated to a database.
  */
+
+
 public class Customer {
-    //Customer data
+    //Customer data, default
     private int customerID;
     private String firstName, lastName;
     private String street, city, state, country;
     private String phone, email;
     private Date dateOfBirth;
+    
 
+    /** 
+     * Created by: EG
+     * Date: 7/6
+     * Default Constructor for Customer initializes everything to -1
+     */
+    public Customer(){
+        customerID = -1;
+        firstName = "";
+        lastName = "";
+        street = "";
+        city = "";
+        state = "";
+        country = "";
+        phone = "";
+        email = "";
+        dateOfBirth = Date.valueOf("0000-1-1");
+    }
+    
+    /**
+     * Created by: EG
+     * Date: 7/6
+     * Constructor takes Array of Data to parse customer data
+     * @param customerData 
+     * 
+     */
+    public Customer(String[] customerData){
+        customerID = Integer.parseInt(customerData[0]);
+        firstName = customerData[1];
+        lastName = customerData[2];
+        street = customerData[3];
+        city = customerData[4];
+        state = customerData[5];
+        country = customerData[6];
+        phone = customerData[7];
+        email = customerData[8];
+        //Date must be in format "YYYY-[m]m-[d]d"
+        dateOfBirth = dateOfBirth.valueOf(customerData[9]);
+        
+    }
     
     //All getter and setter methods created by Emmanuel Girin 6/25
     //Getter and Setter Methods for Customer Data
@@ -103,8 +148,8 @@ public class Customer {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
+    public void setDateOfBirth(Date dOB) {
+        this.dateOfBirth = dOB;
     }
     
     

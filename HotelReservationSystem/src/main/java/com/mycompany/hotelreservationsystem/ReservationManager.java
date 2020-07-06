@@ -19,6 +19,7 @@ import java.sql.Date;
 class ReservationManager {
     //data
     Reservation currentReservation;
+    Database dBase;
     
     
     //methods

@@ -11,6 +11,8 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.*;
 
@@ -37,6 +39,7 @@ import javax.swing.*;
 
 public class HotelReservationProgram extends JFrame implements ActionListener {
     //GUI data members
+    Database dbase;
     Frame frame;
     JPanel mainPanel;
     JPanel customerFormPanel;
@@ -100,11 +103,20 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
     
     /**
      * Created by Emmanuel Girin 6/25 - basic structure
+     * Modified 7/6 by EG to create Database Object
      * Connects to the local SQL database on client machine
      * Catches and handles a database connection error
      */
     public void connectDatabase() {
-        //establish connection to Database
+        try {
+            //establish connection to Database
+            dbase = new Database();
+            
+        //Error needs Modification to display message to user
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(HotelReservationProgram.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
     
    

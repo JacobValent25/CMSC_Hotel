@@ -4,5 +4,6 @@ Revision 1: Emmanuel Girin 6/25/2020 - updated readme File, uploaded entire stru
             java project including all classes, some methods, some data members. Please refer to pseudocode
             as guide for making coding updates. However there are probably some parameters passed to methods
             that will have to be updated in the pseudocode
-            
-            
+    
+Revision 2: Emmanuel Girin 7/6/2020 - See code for changes. Added Database Object to interface with from java to SQL.
+            Completed Login, CustomerManager, and Customer class. Need Database Table IDs to continue

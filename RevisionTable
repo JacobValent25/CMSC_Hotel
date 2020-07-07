@@ -7,3 +7,5 @@ Revision 1: Emmanuel Girin 6/25/2020 - updated readme File, uploaded entire stru
     
 Revision 2: Emmanuel Girin 7/6/2020 - See code for changes. Added Database Object to interface with from java to SQL.
             Completed Login, CustomerManager, and Customer class. Need Database Table IDs to continue
+Revision 3: Emmanuel Girin 7/7/2020 - Filled in more Code in Java program, Reservation Manager, Reservation, Room Manager, Room
+            Edited SQL document to modify tables and create new table, see code for updates.

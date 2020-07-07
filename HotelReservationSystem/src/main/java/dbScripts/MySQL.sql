@@ -16,7 +16,7 @@ CREATE table userRecords
 -- Edited 7/6 by EG auto incrementing primary key
 CREATE table customerRecords
 (
-    customerID int IDENTITY(1,1) PRIMARY KEY,
+    customerID int NOT NULL AUTO_INCREMENT PRIMARY KEY,
     firstName VARCHAR(50),
     lastName VARCHAR(50),
     streetAddress VARCHAR(50),
@@ -31,30 +31,22 @@ CREATE table customerRecords
 -- Edited 7/6 by EG auto incrementing primary key
 CREATE table roomRecords
 (
-    roomID int IDENTITY(1,1) PRIMARY KEY,
+    roomID int NOT NULL AUTO_INCREMENT PRIMARY KEY,
     roomNumber int,
     hotelName VARCHAR(50),
     type VARCHAR(50),
     price FLOAT
 );
 
---Create Table RoomBookings
---Created by EG 7/7 for keeping track of available rooms
-CREATE table roomBookings
-(
-    BookingID int IDENTITY(1,1) PRIMARY KEY,
-    FOREIGN KEY (roomID) REFERENCES roomRecords(roomID),
-    FOREIGN KEY (reservationID) REFERENCES reservationRecords(reservationID),
-    checkIn Date,
-    checkOut Date
-);    
+  
 
 -- Create table reservation record
 -- Edited by EG 7/6 changed roomIDs to be a String of varchar(250). Room IDS will be listed and seperated by , to support multiple rooms
 -- Removed reservation number, because it will be auto generated as the reservationID
 CREATE table reservationRecords
 (
-    reservationID int IDENTITY(1,1) PRIMARY KEY,
+    reservationID int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    roomID int,
     customerID int,
     roomsBookedByID VARCHAR(250),
     checkin DATE,
@@ -66,15 +58,24 @@ CREATE table reservationRecords
     CONSTRAINT customerID
     FOREIGN KEY
 (customerID)
-    REFERENCES cmsc495.customer
-(customerID),
-    CONSTRAINT room
-    FOREIGN KEY
-(roomID)
-    REFERENCES cmsc495.room
-(roomID)
+    REFERENCES cmsc495.customerRecords
+(customerID)
 );
 
+--Create Table RoomBookings
+--Created by EG 7/7 for keeping track of available rooms
+CREATE table roomBookings
+(
+    BookingID int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    roomID int,
+    reservationID int,
+	CONSTRAINT roomID
+    FOREIGN KEY (roomID) REFERENCES cmsc495.roomRecords(roomID),
+    CONSTRAINT reservationID
+    FOREIGN KEY (reservationID) REFERENCES cmsc495.reservationRecords(reservationID),
+    checkIn Date,
+    checkOut Date
+);
 
 -- TESTING 
 

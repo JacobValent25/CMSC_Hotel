@@ -1,5 +1,5 @@
 -- CREATE TABLES
---Removed roomRecords EG 7/6 redundant table
+-- Removed roomRecords EG 7/6 redundant table
 
 -- Create table USER RECORDS
 -- Edited 7/6 by EG to remove message, boolean replace with firstname lastname
@@ -62,8 +62,8 @@ CREATE table reservationRecords
 (customerID)
 );
 
---Create Table RoomBookings
---Created by EG 7/7 for keeping track of available rooms
+-- Create Table RoomBookings
+-- Created by EG 7/7 for keeping track of available rooms
 CREATE table roomBookings
 (
     BookingID int NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -127,10 +127,10 @@ INSERT into reservationRecords
     numGuests,
     numRooms
     )
---Changed to reflect 2 rooms and roomIDs of 1, 2
+-- Changed to reflect 2 rooms and roomIDs of 1, 2
 VALUES(1, '2017-06-15', '1, 2', '2017-06-17', 0, 4, 2);
 
---Created a Test 
+-- Created a Test 
 INSERT into roomBookings
     (
     roomID,
@@ -142,7 +142,7 @@ VALUES(1, 1, '2017-6-15', '2017-6-17'),
       (2, 1, '2017-6-15', '2017-6-17');
 
 -- SELECT 
---EG modified tests to reflect renamed tables and additional tables - 6/7
+-- EG modified tests to reflect renamed tables and additional tables - 6/7
 -- TEST select 
 select *
 from userRecords

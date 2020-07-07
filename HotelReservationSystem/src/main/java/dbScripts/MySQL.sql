@@ -47,20 +47,7 @@ CREATE table roomBookings
     FOREIGN KEY (reservationID) REFERENCES reservationRecords(reservationID),
     checkIn Date,
     checkOut Date
-);
-
-
---Created a Test 
-INSERT into roomBookings
-    (
-    roomID,
-    reservationID
-    checkIn
-    checkOut
-    )
-VALUES(1, 1, '2017-6-15', '2017-6-17'),
-      (2, 1, '2017-6-15', '2017-6-17');
-    
+);    
 
 -- Create table reservation record
 -- Edited by EG 7/6 changed roomIDs to be a String of varchar(250). Room IDS will be listed and seperated by , to support multiple rooms
@@ -141,6 +128,17 @@ INSERT into reservationRecords
     )
 --Changed to reflect 2 rooms and roomIDs of 1, 2
 VALUES(1, '2017-06-15', '1, 2', '2017-06-17', 0, 4, 2);
+
+--Created a Test 
+INSERT into roomBookings
+    (
+    roomID,
+    reservationID
+    checkIn
+    checkOut
+    )
+VALUES(1, 1, '2017-6-15', '2017-6-17'),
+      (2, 1, '2017-6-15', '2017-6-17');
 
 -- SELECT 
 --EG modified tests to reflect renamed tables and additional tables - 6/7

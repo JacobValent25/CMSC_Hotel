@@ -1,30 +1,22 @@
 -- CREATE TABLES
--- create table room records
-create table roomRecords
-(
-    roomID int,
-    roomNumber int,
-    hotelName varChar(50),
-    type varchar(50),
-    price FLOAT,
-    datesBooked DATE,
-    PRIMARY KEY(roomID)
-);
+--Removed roomRecords EG 7/6 redundant table
 
 -- Create table USER RECORDS
+-- Edited 7/6 by EG to remove message, boolean replace with firstname lastname
 CREATE table userRecords
 (
     empID int,
     password VARCHAR(25),
-    validateCredentials BOOLEAN,
-    message VARCHAR(255),
+    firstName VARCHAR(50),
+    lastName VARCHAR(50),
     PRIMARY KEY(empID)
 );
 
 -- Create Customer table
-CREATE table customer
+-- Edited 7/6 by EG auto incrementing primary key
+CREATE table customerRecords
 (
-    customerID int,
+    customerID int IDENTITY(1,1) PRIMARY KEY,
     firstName VARCHAR(50),
     lastName VARCHAR(50),
     streetAddress VARCHAR(50),
@@ -32,37 +24,58 @@ CREATE table customer
     state VARCHAR(2),
     country VARCHAR(50),
     phone VARCHAR(50),
-    email VARCHAR(50),
-    PRIMARY KEY(customerID)
+    email VARCHAR(50)
 );
 
 -- Create Table Rooms
-CREATE table room
+-- Edited 7/6 by EG auto incrementing primary key
+CREATE table roomRecords
 (
-    roomID int,
+    roomID int IDENTITY(1,1) PRIMARY KEY,
     roomNumber int,
     hotelName VARCHAR(50),
     type VARCHAR(50),
-    price FLOAT,
-    datesBooked Date,
-    isAvailable BOOLEAN,
-    PRIMARY KEY(roomID)
+    price FLOAT
 );
 
+--Create Table RoomBookings
+--Created by EG 7/7 for keeping track of available rooms
+CREATE table roomBookings
+(
+    BookingID int IDENTITY(1,1) PRIMARY KEY,
+    FOREIGN KEY (roomID) REFERENCES roomRecords(roomID),
+    FOREIGN KEY (reservationID) REFERENCES reservationRecords(reservationID),
+    checkIn Date,
+    checkOut Date
+);
+
+
+--Created a Test 
+INSERT into roomBookings
+    (
+    roomID,
+    reservationID
+    checkIn
+    checkOut
+    )
+VALUES(1, 1, '2017-6-15', '2017-6-17'),
+      (2, 1, '2017-6-15', '2017-6-17');
+    
+
 -- Create table reservation record
+-- Edited by EG 7/6 changed roomIDs to be a String of varchar(250). Room IDS will be listed and seperated by , to support multiple rooms
+-- Removed reservation number, because it will be auto generated as the reservationID
 CREATE table reservationRecords
 (
-    id int,
+    reservationID int IDENTITY(1,1) PRIMARY KEY,
     customerID int,
-    roomID int,
+    roomsBookedByID VARCHAR(250),
     checkin DATE,
-    reservNumber int,
     checkOut DATE,
     preferedType int,
     price FLOAT,
     numGuests int,
     numRooms int,
-    PRIMARY KEY(id),
     CONSTRAINT customerID
     FOREIGN KEY
 (customerID)
@@ -79,22 +92,22 @@ CREATE table reservationRecords
 -- TESTING 
 
 -- INSERT
--- populate rocrods
+-- populate records
+-- Edited 7/6 by EG auto incrementing primary key, removed Dates booked
 INSERT into roomRecords
     (
-    roomID,
     roomNumber,
     hotelName,
     type,
-    price,
-    datesBooked
+    price
     )
-VALUES(1, 204, 'testHotel', 'test', 24.50, '2017-06-15');
+VALUES(204, 'testHotel', 'Single', 24.50),
+      (205, 'testHotel', 'Suite', 74.50);
 
 -- populate Customer
-INSERT into customer
+-- Edited 7/6 by EG auto incrementing primary key
+INSERT into customerRecords
     (
-    customerID,
     firstName,
     lastName,
     streetAddress,
@@ -104,46 +117,49 @@ INSERT into customer
     phone,
     email
     )
-VALUES(14477895, 'leleo', 'Joins', 'street', 'city', 'MD', 'USA' , '4477558784', 'test@umuc.edu');
+VALUES('leleo', 'Joins', 'street', 'city', 'MD', 'USA' , '4477558784', 'test@umuc.edu');
 
 -- populate user records
+-- Edited 7/6 by EG to reflect changes in table
 INSERT into userRecords
     ( empID,
     password,
-    validateCredentials,
-    message
     )
-VALUES(140111, '1455444', true, 'testing message');
+VALUES(140111, '1455444', 'John', 'Candy');
 
 -- populate reservation Records
+-- Edited 7/6 by EG to reflect changes in table
 INSERT into reservationRecords
     (
-    id,
     customerID,
     checkin,
-    reservNumber,
+    roomsBookedByID
     checkOut,
     preferedType,
     numGuests,
     numRooms
     )
-VALUES(001, 14477895, '2017-06-15', 478946546, '2017-06-15', 556, 4, 1);
-
+--Changed to reflect 2 rooms and roomIDs of 1, 2
+VALUES(1, '2017-06-15', '1, 2', '2017-06-17', 0, 4, 2);
 
 -- SELECT 
-
+--EG modified tests to reflect renamed tables and additional tables - 6/7
 -- TEST select 
 select *
 from userRecords
 
 -- TEST select 
 select *
-from roomrecords
+from roomRecords
 
 -- TEST select
 SELECT *
-from customer
+from customerRecords
 
 -- TEST select
 SELECT *
 from reservationRecords
+
+-- Test select
+SELECT *
+from roomBookings

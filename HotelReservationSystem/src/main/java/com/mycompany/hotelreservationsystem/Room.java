@@ -23,7 +23,7 @@ package com.mycompany.hotelreservationsystem;
 public class Room {
     private String hotelName;
     private int room_Number, roomID; //RoomID is the database unique key
-    private int roomType; //0, 1, 2, 3, 4
+    private int roomType; // 1 = Single, 2 = Double Beds, 3 = King , 4 = Suite
     private double nightlyPrice;
     
     /**
@@ -35,12 +35,28 @@ public class Room {
      * @param type
      * @param price 
      */
-    public Room(int id, String hotel, int roomNum, int type, double price){
-        roomID = id;
-        hotelName = hotel;
-        roomType = type;
-        room_Number = roomNum;
-        nightlyPrice = price;
+    public Room(String[] roomData) throws NumberFormatException, DatabaseException{
+        roomID = Integer.parseInt(roomData[0]);
+        hotelName = roomData[1];
+        room_Number = Integer.parseInt(roomData[2]);
+        switch (roomData[3]) {
+            case "Single":
+                roomType = 1;
+                break;
+            case "Double Beds":
+                roomType = 2;
+                break;
+            case "King":
+                roomType = 3;
+                break;
+            case "Suite":
+                roomType = 4;
+                break;
+            default :
+                throw new DatabaseException("Error: Invalid Data in Database");
+        } 
+        
+        nightlyPrice = Integer.parseInt(roomData[4]);
     }
 
     
@@ -54,5 +70,25 @@ public class Room {
         return "Room{" + "hotelName=" + hotelName + ", room_Number=" + room_Number + ", roomID=" + roomID + ", roomType=" + roomType + ", nightlyPrice=" + nightlyPrice + '}';
     }
     
-    
+    //getters created 7/7 by EG
+
+    public String getHotelName() {
+        return hotelName;
+    }
+
+    public int getRoom_Number() {
+        return room_Number;
+    }
+
+    public int getRoomID() {
+        return roomID;
+    }
+
+    public int getRoomType() {
+        return roomType;
+    }
+
+    public double getNightlyPrice() {
+        return nightlyPrice;
+    } 
 }

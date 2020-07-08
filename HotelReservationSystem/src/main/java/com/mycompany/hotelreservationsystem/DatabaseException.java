@@ -7,12 +7,12 @@ package com.mycompany.hotelreservationsystem;
 
 /**
  *
- * @author Emmanuel Girin
- * Project: Hotel Reservation System
- * Date: 06/25/2020
- * Description: Class that handles any databaseLookUpException
- * 
+ * @author HallogenicX
  */
-class databaseLookUpException extends Exception {
+public class DatabaseException extends Exception {
+
+    public DatabaseException(String msg) {
+        super(msg);
+    }
     
 }

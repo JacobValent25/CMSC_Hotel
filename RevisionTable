@@ -9,3 +9,4 @@ Revision 2: Emmanuel Girin 7/6/2020 - See code for changes. Added Database Objec
             Completed Login, CustomerManager, and Customer class. Need Database Table IDs to continue
 Revision 3: Emmanuel Girin 7/7/2020 - Filled in more Code in Java program, Reservation Manager, Reservation, Room Manager, Room
             Edited SQL document to modify tables and create new table, see code for updates.
+Revision 4: Jacob Valentine 7/7/2020 - Continued working on the GUI, divided the Customer Management screen into seperate panels related to their function (I.E. To select, to lookup, and to make).

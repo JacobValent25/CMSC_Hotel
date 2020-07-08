@@ -6,6 +6,7 @@
 package com.mycompany.hotelreservationsystem;
 
 import java.awt.*;
+import java.awt.event.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -24,6 +25,11 @@ import javax.swing.*;
  * @author Jacob Valentine added swing variables to begin fleshing out
  * the GUI panels.
  * @date: 6/30/2020
+ *
+ * @author Jacob Valentine further flesh out the gui panels. Divided the Customer
+ * and Reservation Manager screens into seperate Panels dedicated to specific functions
+ * for better input/output clarity.
+ * @date: 7/07/2020
  * 
  * This class  calls the main function for the program,
  * provides the GUI interface along with the input output for a hotel
@@ -35,6 +41,9 @@ import javax.swing.*;
  * Created by Emmanuel Girin 6/25 - basic structure added methods, some data values
  * Modified by Jacob Valentine 6/20 - Added additional Swing variables, made 
  * HotelReservationProgram an extension of JFrame, and implemented an actionListenr
+ * 
+ * Modified by Jacob Valentine 7/07 - Added additional Swing variables, divided 
+ * the customer Manager panel into seperate panels for select, lookup, and make options.
  */
 
 public class HotelReservationProgram extends JFrame implements ActionListener {
@@ -53,8 +62,8 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
     
     
     //Login Screen GUI Data members
-    private final int LOGIN_X = 500; //The default width of the Login window
-    private final int LOGIN_Y = 300; //The default hieght of the Login window
+    private final int LOGIN_X = 250; //The default width of the Login window
+    private final int LOGIN_Y = 200; //The default hieght of the Login window
     private final JLabel loginScreenLabel = new JLabel("Login");
     private final JLabel employeeIDLabel = new JLabel("Employee ID: ");
     private final JTextField employeeIDField = new JTextField();
@@ -66,17 +75,75 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
     private final int CUSTOMER_X = 400; //The default width of the CustomerManger window
     private final int CUSTOMER_Y = 600; //The default hieght of the CustomerManager window
     private final JButton logoutCustomerMangerButton = new JButton("Logout");
-    private final JLabel customerNameLabel = new JLabel("Customer Full Name: ");
-    private final JTextField customerNameField = new JTextField();
-    private final JLabel customerPhoneLabel = new JLabel("Customer Phone Number: ");
-    private final JTextField customerPhoneField = new JTextField();
+    
+    
+    //CustomerOptionPanel GUI Data members
+    private final Box customerOptionBox = Box.createVerticalBox();
+    private final ButtonGroup customerOptionGroup = new ButtonGroup();
+    private final JRadioButton customerSelectRadioButton = new JRadioButton("Select Customer");
+    private final JRadioButton customerLookupRadioButton = new JRadioButton("Lookup Customer");
+    private final JRadioButton customerMakeRadioButton = new JRadioButton("Make New Customer Account");
+    
+    //SelectCustomerPanel Data members
+    private JPanel selectCustomerPanel;
+    private final JLabel selectHeaderLabel = new JLabel("Select Customer");
+    private final JLabel selectCustomerIDLabel = new JLabel("Customer ID: ");
+    private final JTextField selectCustomerIDField = new JTextField();
+    private final JButton selectLookupCustomerButton = new JButton("Lookup");
+    private final Box customerConfirmationBox = Box.createVerticalBox();
+    private final JTextField customerConfirmationTextField = new JTextField();
+    private final JButton customerConfirmationButton = new JButton("Select");
+    
+    //LookupCustomerPanel Data members
+    private final JLabel lookupCustomerIDLabel = new JLabel("CustomerID: ");
+    private final JTextField lookupCustomerIDField = new JTextField();
+    private final JLabel lookupCustomerFistNameLabel = new JLabel("First Name: ");
+    private final JTextField lookupCustomerFirstNameField = new JTextField();
+    private final JLabel lookupCustomerLastNameLabel = new JLabel("Last Name: ");
+    private final JTextField lookupCustomerLastNameField = new JTextField();
+    private final JLabel lookupCustomerStreetLabel = new JLabel("Street Address: ");
+    private final JTextField lookupCustomerStreetField = new JTextField();
+    private final JLabel lookupCustomerCityLabel = new JLabel("City: ");
+    private final JTextField lookupCustomerCityField = new JTextField();
+    private final JLabel lookupCustomerStateLabel = new JLabel("State: ");
+    private final JTextField lookupCustomerStateField = new JTextField();
+    private final JLabel lookupCustomerCountryLabel = new JLabel("Country: ");
+    private final JTextField lookupCustomerCountryField = new JTextField();
+    private final JLabel lookupCustomerPhoneLabel = new JLabel("Phone Number: ");
+    private final JTextField lookupCustomerPhoneField = new JTextField();
+    private final JLabel lookupCustomerEmailLabel = new JLabel("Email: ");
+    private final JTextField lookupCustomerEmailField = new JTextField();
     private final JButton lookupCustomerButton = new JButton("Lookup Customer");
-    private final JButton updateCustomerButton = new JButton("Update Customer Account");
-    private final JButton createCustomerButton = new JButton("Create New Customer Account");  
+    
+    
+    //LookupList Data Members
+    private JFrame lookupListFrame;
+    private final JScrollPane lookupListPane = new JScrollPane();
+    private final JTextField lookupListField = new JTextField();
+    
+    
+    //MakeCustomerPanel Data members
+    private final JLabel makeCustomerFistNameLabel = new JLabel("First Name: ");
+    private final JTextField makeCustomerFirstNameField = new JTextField();
+    private final JLabel makeCustomerLastNameLabel = new JLabel("Last Name: ");
+    private final JTextField makeCustomerLastNameField = new JTextField();
+    private final JLabel makeCustomerStreetLabel = new JLabel("Street Address: ");
+    private final JTextField makeCustomerStreetField = new JTextField();
+    private final JLabel makeCustomerCityLabel = new JLabel("City: ");
+    private final JTextField makeCustomerCityField = new JTextField();
+    private final JLabel makeCustomerStateLabel = new JLabel("State: ");
+    private final JTextField makeCustomerStateField = new JTextField();
+    private final JLabel makeCustomerCountryLabel = new JLabel("Country: ");
+    private final JTextField makeCustomerCountryField = new JTextField();
+    private final JLabel makeCustomerPhoneLabel = new JLabel("Phone Number: ");
+    private final JTextField makeCustomerPhoneField = new JTextField();
+    private final JLabel makeCustomerEmailLabel = new JLabel("Email: ");
+    private final JTextField makeCustomerEmailField = new JTextField();
+    private final JButton makeCustomerButton = new JButton("Make Customer"); 
     
     //ReservationFormPanel GUI Data Members
-    private final int RESERVATION_X = 400; //The default width of the CustomerManger window
-    private final int RESERVATION_Y = 600; //The default hieght of the CustomerManager window
+    private final int RESERVATION_X = 400; //The default width of the ReservationManager window
+    private final int RESERVATION_Y = 600; //The default hieght of the ReservationManager window
     private final JLabel reservationIDLabel = new JLabel("Reservation ID: ");
     private final JTextField reservationIDField = new JTextField();
     private final JButton selectReservationButton = new JButton("Select Reservation");
@@ -101,7 +168,7 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
     }
     
     
-    /**
+     /**
      * Created by Emmanuel Girin 6/25 - basic structure
      * Modified 7/6 by EG to create Database Object
      * Connects to the local SQL database on client machine
@@ -115,8 +182,6 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
         //Error needs Modification to display message to user
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(HotelReservationProgram.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
     }
     
    
@@ -261,6 +326,8 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
     /**
      * Created by Jacob Valentine 6/30
      * initializes all the panels used for the different management screens.
+     * Modified by Jacob Valentine 7/07
+     * further added more panels to intialize: Customer Manager form panel and Customer Select Panels
      */
     public void initializePanels(){
         //Initialize the login screen panel.
@@ -310,33 +377,36 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
         c.gridx = 0;
         c.gridy = 2;
         customerFormPanel.add(logoutCustomerMangerButton, c);
+        customerOptionGroup.add(customerSelectRadioButton);
+        customerOptionGroup.add(customerLookupRadioButton);
+        customerOptionGroup.add(customerMakeRadioButton);
+        customerSelectRadioButton.setSelected(true);
+        customerOptionBox.add(customerSelectRadioButton);
+        customerOptionBox.add(customerLookupRadioButton);
+        customerOptionBox.add(customerMakeRadioButton);
+        customerOptionBox.setBorder(BorderFactory.createTitledBorder("Options"));
         c.gridwidth = 1;
         c.gridx = 0;
         c.gridy = 3;
-        customerFormPanel.add(customerNameLabel, c);
-        c.gridx = 2;
-        c.gridy = 3;
-        customerFormPanel.add(customerNameField, c);
-        c.gridx = 0;
-        c.gridy = 4;
-        customerFormPanel.add(customerPhoneLabel, c);
-        c.gridx = 1;
-        c.gridy = 4;
-        customerFormPanel.add(customerPhoneField, c);
-        c.gridwidth = 2;
-        c.gridx = 0;
-        c.gridy = 5;
-        customerFormPanel.add(lookupCustomerButton, c);
-        c.gridx = 0;
-        c.gridy = 6;
-        customerFormPanel.add(updateCustomerButton, c);
-        c.gridx = 0;
-        c.gridy = 7;
-        customerFormPanel.add(createCustomerButton, c);
-        lookupCustomerButton.addActionListener(this);
-        updateCustomerButton.addActionListener(this);
-        createCustomerButton.addActionListener(this);
+        customerFormPanel.add(customerOptionBox, c);        
         
+        //Initialize the SelectCustomerPanel, and set it as the default
+        selectCustomerPanel = new JPanel();
+        selectCustomerPanel.setLayout(new BoxLayout(selectCustomerPanel, BoxLayout.LINE_AXIS);
+        selectCustomerPanel.add(selectHeaderLabel);
+        selectCustomerPanel.add(selectCustomerIDLabel);
+        selectCustomerPanel.add(selectCustomerIDField);
+        selectCustomerPanel.add(selectLookupCustomerButton);
+        customerConfirmationBox.add(customerConfirmationTextField);
+        customerConfirmationBox.setBorder(BorderFactory.createTitledBorder("Confirmation"));
+        selectCustomerPanel.add(customerConfirmationBox);
+        selectCustomerPanel.add(customerConfirmationButton);
+        c.gridwidth = 2;
+        c.gridheight = 4
+        c.gridx = 3;
+        c.gridy = 0;
+        customerFormPanel.add(selectCustomerPanel, c);
+                
         //Initialize the reservation manager screen panel
         //TODO
     }

@@ -85,7 +85,7 @@ class CustomerManager {
         
         //create Query String from parameters
         String sql = "SElECT * " +
-                      "From customerRecords " +
+                      "FROM customerRecords " +
                       "WHERE firstName = '" + firstName + "'" +
                       "AND lastName = " + "'" + lastName + "'";
         
@@ -139,7 +139,7 @@ class CustomerManager {
         
         //create Query String from parameters
         String sql = "SElECT * " +
-                      "From customerRecords " +
+                      "FROM customerRecords " +
                       "WHERE phone = '" + phoneNumber + "'";
         
         //Query database, which returns a result set
@@ -191,7 +191,7 @@ class CustomerManager {
         
         //create Query String from parameters
         String sql = "SElECT * " +
-                      "From customerRecords " +
+                      "FROM customerRecords " +
                       "WHERE phone = '" + email + "'";
         
         //Query database, which returns a result set

@@ -18,11 +18,11 @@ public class Database {
    
     //DBC driver name and database URL
     static final String driver = "com.mysql.jdbc.Driver"; 
-    static final String url = "jdbc:mysql://localhost/";
+    static final String url = "jdbc:mysql://localhost/hotelManager";
 
     //Credentials
-    static final String user = "root";
-    static final String pass = "Cr@ckfun18";
+    static final String user = "hotelEmployee";
+    static final String pass = "password";
     
     
     /**

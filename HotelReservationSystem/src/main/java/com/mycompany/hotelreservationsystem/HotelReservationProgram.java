@@ -172,6 +172,7 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
         a.initializePanels();
         a.connectDatabase();
         a.displayLogin();
+        a.displayCustomerManager();
     }
     
     
@@ -256,7 +257,7 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
         frame.setSize(425, 250);
         frame.setLocationByPlatform(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setResizable(true);
+        frame.setResizable(false);
         frame.setVisible(true);
 
     }
@@ -270,7 +271,13 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
     void displayCustomerManager(){
         //initialize CustomerManager
         custMGR = new CustomerManager(dbase);
-        
+        frame.remove(frame.getContentPane());
+        frame.setContentPane(customerFormPanel);
+        frame.pack();
+        frame.setLocationByPlatform(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setResizable(true);
+        frame.setVisible(true);
         
     }
     
@@ -424,21 +431,16 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
         passwordField.setEditable(true);
         
         
+        
         //Initialize the customer manager screen panel.
         customerFormPanel = new JPanel(new GridBagLayout());
         c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
-        c.weightx = 1;
+        c.weightx = .5;
         c.weighty = 1;
-        c.gridwidth = 2;
+        c.gridwidth = 1;
         c.gridx = 0;
         c.gridy = 0;
-        customerFormPanel.add(activeEmployeeIDLabel, c);
-        c.gridx = 0;
-        c.gridy = 1;
-        customerFormPanel.add(userTypeLabel, c);
-        c.gridx = 0;
-        c.gridy = 2;
         customerFormPanel.add(logoutCustomerMangerButton, c);
         customerOptionGroup.add(customerSelectRadioButton);
         customerOptionGroup.add(customerLookupRadioButton);

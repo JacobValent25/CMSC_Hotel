@@ -6,12 +6,9 @@
 package com.mycompany.hotelreservationsystem;
 
 import java.awt.*;
-import java.awt.event.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.sql.Date;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
@@ -44,12 +41,21 @@ import javax.swing.*;
  * 
  * Modified by Jacob Valentine 7/07 - Added additional Swing variables, divided 
  * the customer Manager panel into seperate panels for select, lookup, and make options.
+ * 
+ * Modified by Emmanuel Girin 7/10 - Starting Filling out methods and tweaking GUI to build program, added method diplayMessagerToUser(str)
  */
 
 public class HotelReservationProgram extends JFrame implements ActionListener {
-    //GUI data members
+    //Non GUI Data members
+    Login login;
+    ReservationManager resMGR;
+    CustomerManager custMGR;
+    RoomManager roomMGR;
     Database dbase;
-    Frame frame;
+    
+    
+    //GUI data members
+    JFrame frame;
     JPanel mainPanel;
     JPanel customerFormPanel;
     JPanel reservationFormPanel;
@@ -58,9 +64,6 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
     private final JLabel userTypeLabel = new JLabel("Current User Type: ");
     private final JLabel activeCustomerLabel = new JLabel("Current Customer: ");
     
-    
-    
-    
     //Login Screen GUI Data members
     private final int LOGIN_X = 250; //The default width of the Login window
     private final int LOGIN_Y = 200; //The default hieght of the Login window
@@ -68,7 +71,9 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
     private final JLabel employeeIDLabel = new JLabel("Employee ID: ");
     private final JTextField employeeIDField = new JTextField();
     private final JLabel passwordLabel = new JLabel("Password: ");
-    private final JTextField passwordField = new JTextField();
+    
+    //EG 7/10 changed to passwordField
+    private final JPasswordField passwordField = new JPasswordField();
     private final JButton loginButton = new JButton("Login");
     
     //CustomerFormPanel GUI Data members
@@ -155,7 +160,7 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
     //CustomerManager custMgr;
     //RoomManager roomMgr;
     //Login logon;
-    int  LogonAttemps = 0;
+    int  logonAttempts = 0;
 
     /**
      * Created by Emmanuel Girin 6/25 - basic structure
@@ -163,8 +168,10 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        //HotelReservationProgram a = new HotelReservationProgram();
-        //a.connectDatabase();
+        HotelReservationProgram a = new HotelReservationProgram();
+        a.initializePanels();
+        a.connectDatabase();
+        a.displayLogin();
     }
     
     
@@ -181,22 +188,77 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
             
         //Error needs Modification to display message to user
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(HotelReservationProgram.class.getName()).log(Level.SEVERE, null, ex);
-    }
+            displayMessageToUser("Database Connection Error: ");
+            //Logger.getLogger(HotelReservationProgram.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//end method
     
+    /**
+     * Created: 7/9 EG
+     * Displays Messages to users, can be used for errors or general messaging
+     * @param str 
+     */
+    void displayMessageToUser(String str){
+        JOptionPane.showMessageDialog(null, str);
+    }
    
     /**
      * Created by Emmanuel Girin 6/25 - basic structure
+     * Modified: 7/10 by EG to include body, logic, and GUI elements
      * Display Login GUI prompting user for ID and Password
      * Validate Credentials
      */
-    public void displayLogin(){
-        //Initaliaze to Default
-        int userID = -1;
-        String password = "";
-      
-        //logon.validateCredentials(userID, password);
+     void displayLogin() {
+         
+        //anonymous loginButton moved to here, so it could be implemented
+        loginButton.addActionListener(new ActionListener(){
+        public void actionPerformed(ActionEvent e){
+            //As long 
+            if(logonAttempts <= 4){
+                //if the fields have data in them check them out, else display msg
+                if(!employeeIDField.getText().equals("") & !passwordField.getText().equals("")){
+                    try {
+                        //create a new login object and pass it the dbase
+                        login = new Login(dbase);
+                        
+                        
+                        //set proceed = to whether or not the credentials are valid
+                        boolean proceed = login.validateCredentials(employeeIDField.getText(), passwordField.getText());
+                        
+                        //increment counter of login attempts
+                        logonAttempts++;
+                        
+                        //if valid proceed to next screen
+                        if(proceed){
+                            //reset counter
+                            logonAttempts = 0;
+                            displayCustomerManager();
+                        }
+                        else {
+                            //display error message with count of login attempts
+                            displayMessageToUser(login.getMessage() + "/n Attempt #:  " 
+                                                + logonAttempts + "of 5");
+                        }
+                    }   
+                    catch (SQLException ex) {
+                        Logger.getLogger(HotelReservationProgram.class.getName()).log(Level.SEVERE, null, ex);
+                    } 
+                }
+                else displayMessageToUser("Error: One of the Fields is Blank");
+                }
+            else
+                displayMessageToUser("Error: User exceeded Logon Attempts");
+         };
+        });
         
+        frame = new JFrame("Hotel Reservation Manager");
+        frame.setContentPane(mainPanel);
+        frame.setSize(425, 250);
+        frame.setLocationByPlatform(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setResizable(true);
+        frame.setVisible(true);
+
     }
     
     /**
@@ -206,11 +268,10 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
      * User Navigates to next Screen based on choice
      */
     void displayCustomerManager(){
-        //GUI datamembers
-        //JButton newCustomer, existingCustomer;
-        
         //initialize CustomerManager
-        //custMgr = new CustomerManager();
+        custMGR = new CustomerManager(dbase);
+        
+        
     }
     
     /**
@@ -330,6 +391,8 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
      * further added more panels to intialize: Customer Manager form panel and Customer Select Panels
      */
     public void initializePanels(){
+        frame = new JFrame();
+        
         //Initialize the login screen panel.
         mainPanel = new JPanel(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
@@ -359,7 +422,7 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
         mainPanel.add(loginButton, c);
         employeeIDField.setEditable(true);
         passwordField.setEditable(true);
-        loginButton.addActionListener(this);
+        
         
         //Initialize the customer manager screen panel.
         customerFormPanel = new JPanel(new GridBagLayout());
@@ -392,7 +455,7 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
         
         //Initialize the SelectCustomerPanel, and set it as the default
         selectCustomerPanel = new JPanel();
-        selectCustomerPanel.setLayout(new BoxLayout(selectCustomerPanel, BoxLayout.LINE_AXIS);
+        selectCustomerPanel.setLayout(new BoxLayout(selectCustomerPanel, BoxLayout.LINE_AXIS));
         selectCustomerPanel.add(selectHeaderLabel);
         selectCustomerPanel.add(selectCustomerIDLabel);
         selectCustomerPanel.add(selectCustomerIDField);
@@ -402,7 +465,7 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
         selectCustomerPanel.add(customerConfirmationBox);
         selectCustomerPanel.add(customerConfirmationButton);
         c.gridwidth = 2;
-        c.gridheight = 4
+        c.gridheight = 4;
         c.gridx = 3;
         c.gridy = 0;
         customerFormPanel.add(selectCustomerPanel, c);

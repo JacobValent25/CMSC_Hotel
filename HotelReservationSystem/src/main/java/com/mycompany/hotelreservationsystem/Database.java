@@ -21,8 +21,8 @@ public class Database {
     static final String url = "jdbc:mysql://localhost/";
 
     //Credentials
-    static final String user = "username";
-    static final String pass = "password";
+    static final String user = "root";
+    static final String pass = "Cr@ckfun18";
     
     
     /**

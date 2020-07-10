@@ -21,7 +21,7 @@ import java.sql.SQLException;
 class Login {
     //data
     private String message = "";
-    private Database dBase;
+    private final Database dBase;
     
     
     /**
@@ -42,7 +42,7 @@ class Login {
      * updates Message if either are incorrect
      * @return true if credentials are valid, default is false
      */
-    boolean validateCredentials(int id, String pass) throws SQLException {
+    boolean validateCredentials(String id, String pass) throws SQLException {
         boolean loginFound = false;
         
         //open connection to database

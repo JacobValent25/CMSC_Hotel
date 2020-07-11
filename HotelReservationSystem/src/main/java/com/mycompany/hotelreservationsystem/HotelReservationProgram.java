@@ -75,7 +75,7 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
     
     
     //Login Screen GUI Data members
-    private final int LOGIN_X = 250; //The default width of the Login window
+    private final int LOGIN_X = 300; //The default width of the Login window
     private final int LOGIN_Y = 200; //The default hieght of the Login window
     private final JLabel loginScreenLabel = new JLabel("Login");
     private final JLabel employeeIDLabel = new JLabel("Employee ID: ");
@@ -257,11 +257,14 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
      */
     public void displayLogin() {
          
-        //anonymous loginButton moved to here, so it could be implemented
+        //anonymous loginButton moved to here, so it could be implemented 
+        //without case statements for each button
         loginButton.addActionListener(new ActionListener(){
+        @SuppressWarnings("deprecation")
+        @Override
         public void actionPerformed(ActionEvent e){
             //As long 
-            if(logonAttempts <= 4){
+            if(logonAttempts < 4){
                 //if the fields have data in them check them out, else display msg
                 if(!employeeIDField.getText().equals("") & !passwordField.getText().equals("")){
                     try {
@@ -283,20 +286,37 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
                         }
                         else {
                             //display error message with count of login attempts
-                            displayMessageToUser(login.getMessage() + "/n Attempt #:  " 
-                                                + logonAttempts + "of 5");
+                            displayMessageToUser(login.getMessage() + "\n Attempt #:  " 
+                                                + logonAttempts + " of 5");
+                            //reset to blank
+                            employeeIDField.setText("");
+                            passwordField.setText("");
                         }
                     }   
                     catch (SQLException ex) {
-                        Logger.getLogger(HotelReservationProgram.class.getName()).log(Level.SEVERE, null, ex);
+                        //error handling display SQL Error Message to User
+                        if(ex.getMessage() != null) {
+                            displayMessageToUser("SQL Error: " + ex.getLocalizedMessage());
+                        }
                     } 
                 }
-                else displayMessageToUser("Error: One of the Fields is Blank");
+                else {
+                    displayMessageToUser("Error: One of the Fields is Blank");
                 }
-            else
-                displayMessageToUser("Error: User exceeded Logon Attempts");
+                }
+            else {
+                //Message displayed to USER
+                displayMessageToUser("Error: User exceeded Logon Attempts. LOCKED OUT");
+                
+                //Disable fields and button
+                employeeIDField.setText("");
+                passwordField.setText("");
+                employeeIDField.setEnabled(false);
+                passwordField.setEnabled(false);
+                loginButton.setEnabled(false);
+            }
          };
-        });
+        }); //end anonymous button listener class
         
         initializePanels();
         setSize(LOGIN_X, LOGIN_Y);

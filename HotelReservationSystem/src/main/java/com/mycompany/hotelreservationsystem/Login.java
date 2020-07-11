@@ -65,8 +65,8 @@ class Login {
             
             //See if the ID matchces
             sql = "SElECT * " +
-                  "From employeeRecords " +
-                  "WHERE id = '" + id + "'";
+                  "From userRecords " +
+                  "WHERE empID = '" + id + "'";
             
             //Query Database
             rs = dBase.queryDatabase(sql);

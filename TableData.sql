@@ -1,8 +1,18 @@
-CREATE DATABASE  IF NOT EXISTS `hotelManager` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `hotelManager`;
--- MySQL dump 10.13  Distrib 8.0.20, for macos10.15 (x86_64)
+-- Created by EG on 7/11
+DROP DATABASE IF EXISTS hotelmanager;
+CREATE DATABASE IF NOT EXISTS hotelmanager;
+
+USE hotelmanager;
+
+-- Create user hotel employee with default password set to password
+CREATE USER IF NOT EXISTS 'hotelemployee'@'localhost' IDENTIFIED BY 'password';
+GRANT SELECT, INSERT, DELETE ON hotelManager.* TO hotelemployee@'localhost';
+FLUSH PRIVILEGES;
+
+
+-- MySQL dump 10.13  Distrib 8.0.20, for Win64 (x86_64)
 --
--- Host: localhost    Database: hotelManager
+-- Host: localhost    Database: hotelmanager
 -- ------------------------------------------------------
 -- Server version	8.0.20
 
@@ -18,13 +28,13 @@ USE `hotelManager`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `customerRecords`
+-- Table structure for table `customerrecords`
 --
 
-DROP TABLE IF EXISTS `customerRecords`;
+DROP TABLE IF EXISTS `customerrecords`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `customerRecords` (
+CREATE TABLE `customerrecords` (
   `customerID` int NOT NULL AUTO_INCREMENT,
   `firstName` varchar(50) DEFAULT NULL,
   `lastName` varchar(50) DEFAULT NULL,
@@ -40,13 +50,13 @@ CREATE TABLE `customerRecords` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `customerRecords`
+-- Dumping data for table `customerrecords`
 --
 
-LOCK TABLES `customerRecords` WRITE;
-/*!40000 ALTER TABLE `customerRecords` DISABLE KEYS */;
-INSERT INTO `customerRecords` VALUES (1,'leleo','Joins','street','city','MD','USA','4477558784','test@umuc.edu');
-/*!40000 ALTER TABLE `customerRecords` ENABLE KEYS */;
+LOCK TABLES `customerrecords` WRITE;
+/*!40000 ALTER TABLE `customerrecords` DISABLE KEYS */;
+INSERT INTO `customerrecords` VALUES (1,'leleo','Joins','street','city','MD','USA','4477558784','test@umuc.edu');
+/*!40000 ALTER TABLE `customerrecords` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -68,8 +78,8 @@ CREATE TABLE `reservationrecords` (
   PRIMARY KEY (`reservationID`),
   UNIQUE KEY `reservationID_UNIQUE` (`reservationID`),
   KEY `res_customerID` (`customerID`),
-  CONSTRAINT `res_customerID` FOREIGN KEY (`customerID`) REFERENCES `customerRecords` (`customerID`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `res_customerID` FOREIGN KEY (`customerID`) REFERENCES `customerrecords` (`customerID`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -78,18 +88,18 @@ CREATE TABLE `reservationrecords` (
 
 LOCK TABLES `reservationrecords` WRITE;
 /*!40000 ALTER TABLE `reservationrecords` DISABLE KEYS */;
-INSERT INTO `reservationrecords` VALUES (1,1,'1, 2','2017-06-15','2017-06-17',0,4,2);
+INSERT INTO `reservationrecords` VALUES (1,1,'1, 2','2017-06-15','2017-06-17',0,4,2),(2,1,'2, 1','2020-07-30','2020-08-05',200.5,2,2);
 /*!40000 ALTER TABLE `reservationrecords` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `roomBookings`
+-- Table structure for table `roombookings`
 --
 
-DROP TABLE IF EXISTS `roomBookings`;
+DROP TABLE IF EXISTS `roombookings`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `roomBookings` (
+CREATE TABLE `roombookings` (
   `bookingID` int NOT NULL AUTO_INCREMENT,
   `roomID` int DEFAULT NULL,
   `reservationID` int DEFAULT NULL,
@@ -99,29 +109,29 @@ CREATE TABLE `roomBookings` (
   UNIQUE KEY `bookingID_UNIQUE` (`bookingID`),
   KEY `reservationID` (`reservationID`),
   KEY `roomID` (`roomID`),
-  CONSTRAINT `reservationID` FOREIGN KEY (`reservationID`) REFERENCES `reservationRecords` (`reservationID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `roomID` FOREIGN KEY (`roomID`) REFERENCES `roomRecords` (`roomID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `reservationID` FOREIGN KEY (`reservationID`) REFERENCES `reservationrecords` (`reservationID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `roomID` FOREIGN KEY (`roomID`) REFERENCES `roomrecords` (`roomID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `roomBookings`
+-- Dumping data for table `roombookings`
 --
 
-LOCK TABLES `roomBookings` WRITE;
-/*!40000 ALTER TABLE `roomBookings` DISABLE KEYS */;
-INSERT INTO `roomBookings` VALUES (1,1,1,'2017-06-15','2017-06-17'),(2,2,1,'2017-06-15','2017-06-17');
-/*!40000 ALTER TABLE `roomBookings` ENABLE KEYS */;
+LOCK TABLES `roombookings` WRITE;
+/*!40000 ALTER TABLE `roombookings` DISABLE KEYS */;
+INSERT INTO `roombookings` VALUES (1,1,1,'2017-06-15','2017-06-17'),(2,2,1,'2017-06-15','2017-06-17'),(4,2,1,'2020-07-30','2020-08-05');
+/*!40000 ALTER TABLE `roombookings` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `roomRecords`
+-- Table structure for table `roomrecords`
 --
 
-DROP TABLE IF EXISTS `roomRecords`;
+DROP TABLE IF EXISTS `roomrecords`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `roomRecords` (
+CREATE TABLE `roomrecords` (
   `roomID` int NOT NULL AUTO_INCREMENT,
   `roomNumber` int DEFAULT NULL,
   `hotelName` varchar(50) DEFAULT NULL,
@@ -133,23 +143,23 @@ CREATE TABLE `roomRecords` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `roomRecords`
+-- Dumping data for table `roomrecords`
 --
 
-LOCK TABLES `roomRecords` WRITE;
-/*!40000 ALTER TABLE `roomRecords` DISABLE KEYS */;
-INSERT INTO `roomRecords` VALUES (1,204,'testHotel','Single',24.5),(2,205,'testHotel','Suite',74.5);
-/*!40000 ALTER TABLE `roomRecords` ENABLE KEYS */;
+LOCK TABLES `roomrecords` WRITE;
+/*!40000 ALTER TABLE `roomrecords` DISABLE KEYS */;
+INSERT INTO `roomrecords` VALUES (1,204,'testHotel','Single',24.5),(2,205,'testHotel','Suite',74.5);
+/*!40000 ALTER TABLE `roomrecords` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `userRecords`
+-- Table structure for table `userrecords`
 --
 
-DROP TABLE IF EXISTS `userRecords`;
+DROP TABLE IF EXISTS `userrecords`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `userRecords` (
+CREATE TABLE `userrecords` (
   `empID` int NOT NULL,
   `pass` varchar(25) DEFAULT NULL,
   `firstName` varchar(50) DEFAULT NULL,
@@ -160,13 +170,13 @@ CREATE TABLE `userRecords` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `userRecords`
+-- Dumping data for table `userrecords`
 --
 
-LOCK TABLES `userRecords` WRITE;
-/*!40000 ALTER TABLE `userRecords` DISABLE KEYS */;
-INSERT INTO `userRecords` VALUES (140111,'1455444','John','Candy');
-/*!40000 ALTER TABLE `userRecords` ENABLE KEYS */;
+LOCK TABLES `userrecords` WRITE;
+/*!40000 ALTER TABLE `userrecords` DISABLE KEYS */;
+INSERT INTO `userrecords` VALUES (140111,'1455444','John','Candy');
+/*!40000 ALTER TABLE `userrecords` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -178,4 +188,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-07-07 16:26:41
+-- Dump completed on 2020-07-11 11:50:44

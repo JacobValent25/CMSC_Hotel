@@ -58,9 +58,9 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
     private CustomerManager custMGR;
     private RoomManager roomMGR;
     private Database dbase;
+    private int  logonAttempts = 0;
     
     //GUI data members
-    JFrame frame;
     JPanel loginPanel;
     JPanel customerFormPanel;
     JPanel reservationFormPanel;
@@ -176,7 +176,7 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
     private JScrollPane reservationSelectionScrollPane = new JScrollPane();
     private JPanel reservationSelectionSubPanel = new JPanel();
     private final JLabel selectReservationIDLabel = new JLabel("Reservation ID: ");
-    private final JTextField selectReservationIDField = new JLabel(");
+    private final JTextField selectReservationIDField = new JTextField("");
     
     //LookupReservationPanel GUI Data Members
     //private JPanel lookupReservationPanel = new JPanel();
@@ -200,7 +200,7 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
     //private final JTextField checkinDateField = new JTextField();
     
     
-    int  LogonAttempts = 0;
+    
 
     /**
      * Created by Emmanuel Girin 6/25 - basic structure
@@ -217,12 +217,8 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
     
     
     public HotelReservationProgram() {
+        //create JFrame
         super("Hotel Reservation System");
-        setSize(LOGIN_X, LOGIN_Y);
-        initializePanels();
-        add(loginPanel);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setVisible(true);
     }
     
      /**
@@ -302,13 +298,14 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
          };
         });
         
-        frame = new JFrame("Hotel Reservation Manager");
-        frame.setContentPane(mainPanel);
-        frame.setSize(LOGIN_X, LOGIN_Y);
-        frame.setLocationByPlatform(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setResizable(false);
-        frame.setVisible(true);
+        initializePanels();
+        setSize(LOGIN_X, LOGIN_Y);
+        add(loginPanel);
+        setLocationByPlatform(true);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setResizable(false);
+        setVisible(true);
+
     }
     
     /**
@@ -320,13 +317,12 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
     void displayCustomerManager(){
         //initialize CustomerManager
         custMGR = new CustomerManager(dbase);
-        frame.remove(frame.getContentPane());
-        frame.setContentPane(customerFormPanel);
-        frame.setMinimumSize(new Dimension(CUSTOMER_X, CUSTOMER_Y));
-        frame.pack();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setResizable(true);
-        frame.setVisible(true);
+        remove(this.getContentPane());
+        setContentPane(customerFormPanel);
+        setMinimumSize(new Dimension(CUSTOMER_X, CUSTOMER_Y));
+        pack();
+        setResizable(true);
+        setVisible(true);
     }
     
     /**
@@ -448,8 +444,7 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
      * Modified by Jacob Valentine 7/10
      * Addded further panel initialization for Customer Select and Lookup
      */
-    public void initializePanels(){
-        frame = new JFrame();
+    private void initializePanels(){
         
         //Initialize the login panel.
         loginPanel = new JPanel(new GridBagLayout());
@@ -615,6 +610,8 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
         
         //Initialize the reservation manager screen panel
         //TODO
+        
+        
 
     }
     

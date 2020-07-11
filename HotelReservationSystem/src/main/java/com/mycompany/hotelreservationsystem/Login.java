@@ -18,7 +18,7 @@ import java.sql.SQLException;
  * 
  */
 
-class Login {
+public class Login {
     //data
     private String message = "";
     private final Database dBase;

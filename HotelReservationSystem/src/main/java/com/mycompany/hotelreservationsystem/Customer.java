@@ -6,9 +6,6 @@
 package com.mycompany.hotelreservationsystem;
 import java.sql.Date;
 
-
-
-
 /**
  *
  * @author Emmanuel Girin
@@ -51,6 +48,7 @@ public class Customer {
     /**
      * Created by: EG
      * Date: 7/6
+     * MODIFIED: 7/11 removed customerID field out of constructor
      * Constructor takes Array of Data to parse customer data
      * @param customerData 
      * 
@@ -66,7 +64,7 @@ public class Customer {
         phone = customerData[7];
         email = customerData[8];
         //Date must be in format "YYYY-[m]m-[d]d"
-        dateOfBirth = dateOfBirth.valueOf(customerData[9]);
+        dateOfBirth = Date.valueOf(customerData[9]);
         
     }
     

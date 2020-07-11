@@ -21,7 +21,7 @@ public class Database {
     static final String url = "jdbc:mysql://localhost:3306/HotelManager";
 
     //Credentials
-    static final String user = "root";
+    static final String user = "hotelemployee";
     static final String pass = "password";
     
     

@@ -27,7 +27,7 @@ public class Reservation {
     private int numOfGuests = 1;
     private int numOfRoomsNeeded = 1;
     private float totalCost = 0;
-    private String roomIDs;
+    private final String roomIDs;
     private Date checkIn = Date.valueOf("0001-1-1");
     private Date checkOut = Date.valueOf("0001-1-1");
     

@@ -21,12 +21,12 @@ import java.util.ArrayList;
  */
 class RoomManager {
     //data
-    private ArrayList<Room> availableRooms = new ArrayList<Room>();
+    private ArrayList<Room> availableRooms = new ArrayList<>();
     private Date checkIn = Date.valueOf("0001-1-1");
     private Date checkOut = Date.valueOf("0001-1-1");
     private int preferredType = 0; //defaults to 0, which is any type of room 
     private int numRoomsNeeded = 1; //defaults to 1
-    private Database dBase;
+    private final Database dBase;
     
     
     /**
@@ -43,7 +43,7 @@ class RoomManager {
         checkOut = Date.valueOf(dateOut);
         preferredType = prefType;
         numRoomsNeeded = numRooms;
-        availableRooms = new ArrayList<Room>();
+        availableRooms = new ArrayList<>();
     }
     
     /**
@@ -59,15 +59,54 @@ class RoomManager {
         //open connection to database
         dBase.connectDatabase();
         
-        //create Query String from parameters
-        String sql = "SELECT * " +
-                    "  FROM roomRecords AS r" +
-                    " WHERE r.roomID NOT IN(" +
-                    "SELECT b.rooomID " +
-                    " FROM roomBookings AS b" +
-                    " WHERE b.checkIn <= '" + checkIn.toString() + "'" +
-                    " AND b.checkOut >=  '" + checkOut.toString() + "')"
-                    ;
+        String roomType;
+        switch (preferredType){
+            case 1: 
+                roomType = "Single"; 
+                break;
+            case 2:
+                roomType = "Double";
+                break;
+            case 3:
+                roomType = "King";
+                break;
+            default:
+                roomType = "ALL";   
+        }
+        
+        String sql;
+        
+        //create Query String from parameters if no room type selected
+        if (roomType.matches("ALL")){
+            sql = "SELECT * " +
+            " FROM roomRecords AS r" +
+            " WHERE r.roomID NOT IN(" +
+            "SELECT b.rooomID " +
+            " FROM roomBookings AS b" +
+            " WHERE b.checkIn <= CAST('" + checkIn.toString() + 
+            " ' AS DateTime)" +
+            " AND b.checkOut >=  CAST('" + checkOut.toString() + 
+            "' AS DateTime))"
+            ;
+        }
+        else //search for specific type of room
+        {
+            sql = "SELECT * " +
+            " FROM roomRecords AS r" +
+            " WHERE r.RoomType = '" + roomType + "' AND" +
+            " r.roomID NOT IN(" +
+            " SELECT b.rooomID " +
+            " FROM roomBookings AS b" +
+            " WHERE b.checkIn <= CAST('" + checkIn.toString() + 
+            " ' AS DateTime)" +
+            " AND b.checkOut >=  CAST('" + checkOut.toString() + 
+            "' AS DateTime))"
+            ;
+        }
+        
+            
+        
+
         //Query database, which returns a result set
         ResultSet rs = dBase.queryDatabase(sql);
         
@@ -153,8 +192,9 @@ class RoomManager {
             //create room Object
             r = new Room(roomData);  
             
-        }else 
+        }else {
             throw new DatabaseException("Lookup by Room ID Failed");
+        }
         
         
         dbs.closeConnection();

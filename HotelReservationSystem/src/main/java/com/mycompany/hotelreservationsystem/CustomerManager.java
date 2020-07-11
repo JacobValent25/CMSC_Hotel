@@ -5,7 +5,6 @@
  */
 package com.mycompany.hotelreservationsystem;
 
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -20,8 +19,8 @@ import java.sql.SQLException;
  */
 class CustomerManager {
     //data
-    Customer currentCustomer;
-    Database dBase;
+    private Customer currentCustomer;
+    private Database dBase;
     
 
     /**
@@ -50,8 +49,9 @@ class CustomerManager {
         dBase.connectDatabase();
         
         //create Query String from array
-        String sql = "INSERT INTO CustomerRecord " +
-                     "VALUES (";
+        String sql = "INSERT INTO customerrecord (firstName, lastName, streetAddress, " +
+                 "city, state, country, phone, email) " + 
+                 " VALUES (";
         for(int i = 0; i < customerData.length; i++){
             //add data values from array seperated by comma
             if (i < (customerData.length - 1))
@@ -63,6 +63,14 @@ class CustomerManager {
         
         //Attempt to Insert Data into Table
         dBase.insertData(sql);
+        
+        
+        //Perform lookup of Customer ID on newly created Customer
+        sql = "SELECT customerID FROM customerrecords WHERE phone = '" + 
+                currentCustomer.getPhone() + "'";
+        
+        ResultSet rs = dBase.queryDatabase(sql);
+        currentCustomer.setCustomerID(rs.getInt("customerID"));
         
         //Attempt to close Connection
         dBase.closeConnection();
@@ -85,7 +93,7 @@ class CustomerManager {
         
         //create Query String from parameters
         String sql = "SElECT * " +
-                      "FROM customerRecords " +
+                      "FROM customerrecords " +
                       "WHERE firstName = '" + firstName + "'" +
                       "AND lastName = " + "'" + lastName + "'";
         
@@ -139,7 +147,7 @@ class CustomerManager {
         
         //create Query String from parameters
         String sql = "SElECT * " +
-                      "FROM customerRecords " +
+                      "FROM customerrecords " +
                       "WHERE phone = '" + phoneNumber + "'";
         
         //Query database, which returns a result set
@@ -191,7 +199,7 @@ class CustomerManager {
         
         //create Query String from parameters
         String sql = "SElECT * " +
-                      "FROM customerRecords " +
+                      "FROM customerrecords " +
                       "WHERE phone = '" + email + "'";
         
         //Query database, which returns a result set

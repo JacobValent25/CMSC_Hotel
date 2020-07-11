@@ -23,7 +23,7 @@ import java.time.temporal.ChronoUnit;
 class ReservationManager {
     //data
     private Reservation currentReservation;
-    private Database dBase;
+    private final Database dBase;
     private final double taxRate = .10;
     
     
@@ -59,11 +59,12 @@ class ReservationManager {
             totalPrice += RoomManager.lookUpRoom(roomIDs[i], dBase).getNightlyPrice();
             
             //build str of room IDs separated by , to pass to reservation
-            if(i < (roomIDs.length -1))
+            if(i < (roomIDs.length -1)) {
                 roomIDstr += roomIDs[i] + ", ";
-            //for last element only add the element
-            else
+                //for last element only add the element
+            } else {
                 roomIDstr += roomIDs[i];
+            }
         }
         
         //Final Cost
@@ -92,17 +93,18 @@ class ReservationManager {
      * with the finalized reservation details
      * 
      */
-    void finalizeReservation() throws SQLException, DatabaseException{
+    void finalizeReservation(int[] roomIDs) throws SQLException, DatabaseException{
         
         //Attempt to open connection to database
         dBase.connectDatabase();
         
         //create Query String from reservation Object
-        String sql = "INSERT INTO ReservationRecord " +
-                     "VALUES ('NULL', '" + currentReservation.getCustomerID() +
+        String sql = "INSERT INTO reservationRecord"+ 
+                    " (customerID, roomsBookedByID, checkin, checkout, price, numGuests, numRooms)" +
+                     " VALUES ('" + currentReservation.getCustomerID() +
                         "', '" + currentReservation.getRoomIDs() + "', '" +
-                        currentReservation.getCheckIn().toString() + "', '" +
-                        currentReservation.getCheckOut().toString() + "', '" +
+                        currentReservation.getCheckIn() + "', '" +
+                        currentReservation.getCheckOut() + "', '" +
                         currentReservation.getTotalCost() + "', '" +
                         currentReservation.getNumOfGuests() + "', '" +
                         currentReservation.getNumOfRooms() + "')";
@@ -111,10 +113,11 @@ class ReservationManager {
         //Attempt to Insert Data into Table
         dBase.insertData(sql);
         
-        //Lookup ReservationID key from newly created table
+                //Lookup ReservationID key from newly created table
         sql = "SELECT FROM reservationrecords" +
               "WHERE customerID = '" + currentReservation.getCustomerID() + 
-              "' AND checkin = '" + currentReservation.getCheckIn().toString() + "'";
+              "' AND checkin = CAST('" + currentReservation.getCheckIn().toString() 
+                + "' AS DateTime)";
         
         ResultSet rs;
         
@@ -128,8 +131,24 @@ class ReservationManager {
             int i = rs.getInt("reservationID");
             currentReservation.setReservationID(i);
         }
-        else
+        else {
             throw new DatabaseException("Unable to Lookup New Reservation");
+        }
+        
+        //insert RoomBookings
+        for (int i = 0; i < roomIDs.length; i ++){
+            sql = "INSERT INTO roombookings (roomID, reservationID, checkIn, checkOut)" 
+                    + " VALUES('" + roomIDs[i] +
+                    "', '" + currentReservation.getReservationID() +
+                    "', CAST('" + currentReservation.getCheckIn().toString() 
+                            + "' AS DateTime)" +
+                    ", CAST('" + currentReservation.getCheckOut().toString() 
+                            + "' AS DateTime)";
+
+              dBase.insertData(sql);
+        }
+        
+
         
         //Attempt to close Connection
         dBase.closeConnection();
@@ -189,7 +208,8 @@ class ReservationManager {
         String sql = "SElECT * " +
                       "From reservationRecords " +
                       "WHERE customerID = '" + customerID + 
-                      "' AND checkin = '" + checkInDate.toString() + "'";    
+                      "' AND checkin = CAST('" + checkInDate.toString() 
+                      + "' AS DateTime";    
         
         //Query database, which returns a result set
         ResultSet rs = dBase.queryDatabase(sql);

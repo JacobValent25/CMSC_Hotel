@@ -6,9 +6,13 @@
 package com.mycompany.hotelreservationsystem;
 
 import java.awt.*;
+import java.awt.event.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.sql.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
@@ -41,8 +45,10 @@ import javax.swing.*;
  * 
  * Modified by Jacob Valentine 7/07 - Added additional Swing variables, divided 
  * the customer Manager panel into seperate panels for select, lookup, and make options.
- * 
+ *
  * Modified by Emmanuel Girin 7/10 - Starting Filling out methods and tweaking GUI to build program, added method diplayMessagerToUser(str)
+ * 
+ * Modified by Jacob Valentine 7/10 - Filled in Variables for the Resevation option menu's Option, Select, and lookup panel.
  */
 
 public class HotelReservationProgram extends JFrame implements ActionListener {
@@ -53,16 +59,20 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
     RoomManager roomMGR;
     Database dbase;
     
-    
     //GUI data members
     JFrame frame;
-    JPanel mainPanel;
+    JPanel loginPanel;
     JPanel customerFormPanel;
     JPanel reservationFormPanel;
     
     private final JLabel activeEmployeeIDLabel = new JLabel("Employee ID: ");
     private final JLabel userTypeLabel = new JLabel("Current User Type: ");
     private final JLabel activeCustomerLabel = new JLabel("Current Customer: ");
+    //private Customer activeCustomer;
+    
+    
+    
+    
     
     //Login Screen GUI Data members
     private final int LOGIN_X = 250; //The default width of the Login window
@@ -71,9 +81,7 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
     private final JLabel employeeIDLabel = new JLabel("Employee ID: ");
     private final JTextField employeeIDField = new JTextField();
     private final JLabel passwordLabel = new JLabel("Password: ");
-    
-    //EG 7/10 changed to passwordField
-    private final JPasswordField passwordField = new JPasswordField();
+    private final JPasswordField passwordField = new JPasswordField(); //EG 7/10 changed to passwordField
     private final JButton loginButton = new JButton("Login");
     
     //CustomerFormPanel GUI Data members
@@ -83,6 +91,7 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
     
     
     //CustomerOptionPanel GUI Data members
+    private JPanel customerOptionPanel = new JPanel();
     private final Box customerOptionBox = Box.createVerticalBox();
     private final ButtonGroup customerOptionGroup = new ButtonGroup();
     private final JRadioButton customerSelectRadioButton = new JRadioButton("Select Customer");
@@ -100,9 +109,10 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
     private final JButton customerConfirmationButton = new JButton("Select");
     
     //LookupCustomerPanel Data members
+    private JPanel lookupCustomerPanel = new JPanel();
     private final JLabel lookupCustomerIDLabel = new JLabel("CustomerID: ");
     private final JTextField lookupCustomerIDField = new JTextField();
-    private final JLabel lookupCustomerFistNameLabel = new JLabel("First Name: ");
+    private final JLabel lookupCustomerFirstNameLabel = new JLabel("First Name: ");
     private final JTextField lookupCustomerFirstNameField = new JTextField();
     private final JLabel lookupCustomerLastNameLabel = new JLabel("Last Name: ");
     private final JTextField lookupCustomerLastNameField = new JTextField();
@@ -123,11 +133,13 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
     
     //LookupList Data Members
     private JFrame lookupListFrame;
-    private final JScrollPane lookupListPane = new JScrollPane();
+    private JScrollPane lookupListScrollPane = new JScrollPane();
+    private JPanel lookupListScrollPanel = new JPanel();
     private final JTextField lookupListField = new JTextField();
     
     
     //MakeCustomerPanel Data members
+    private JPanel makeCustomerPanel = new JPanel();
     private final JLabel makeCustomerFistNameLabel = new JLabel("First Name: ");
     private final JTextField makeCustomerFirstNameField = new JTextField();
     private final JLabel makeCustomerLastNameLabel = new JLabel("Last Name: ");
@@ -149,18 +161,46 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
     //ReservationFormPanel GUI Data Members
     private final int RESERVATION_X = 400; //The default width of the ReservationManager window
     private final int RESERVATION_Y = 600; //The default hieght of the ReservationManager window
-    private final JLabel reservationIDLabel = new JLabel("Reservation ID: ");
-    private final JTextField reservationIDField = new JTextField();
-    private final JButton selectReservationButton = new JButton("Select Reservation");
-    private final JLabel checkinDateLabel = new JLabel("Checkin Date: ");
-    private final JTextField checkinDateField = new JTextField();
     
-    //Non Gui Data members
-    //ReservationManager reservMgr;
-    //CustomerManager custMgr;
-    //RoomManager roomMgr;
-    //Login logon;
-    int  logonAttempts = 0;
+    //ReservationOptionPanel GUI Data Members
+    private JPanel reservationOptionPanel = new JPanel();
+    private final Box reservationOptionBox = Box.createVerticalBox();
+    private final ButtonGroup reservationOptionGroup = new ButtonGroup();
+    private final JRadioButton reservationSelectRadioButton = new JRadioButton("Select/Edit/Delete Reservation");
+    private final JRadioButton reservationLookupRadioButton = new JRadioButton("Lookup Reservation");
+    private final JRadioButton reservationMakeRadioButton = new JRadioButton("Make New Reservation");
+    private final JButton reservationSeeReservedButton = new JButton("See Active Reservation for this Customer");
+    
+    //ReservationSelectionPanel GUI Data Members
+    private JPanel reservationSelectionPanel = new JPanel();
+    private JScrollPane reservationSelectionScrollPane = new JScrollPane();
+    private JPanel reservationSelectionSubPanel = new JPanel();
+    private final JLabel selectReservationIDLabel = new JLabel("Reservation ID: ");
+    private final JTextField selectReservationIDField = new JLabel(");
+    
+    //LookupReservationPanel GUI Data Members
+    //private JPanel lookupReservationPanel = new JPanel();
+    //private JScrollPane lookupReservationScrollPane = new JScrollPane();
+    //private JPanel lookupReservationSubPanel = new JPanel();
+    //private final JLabel lookupReservationIDLabel = new JLabel("Reservation ID: ");
+    //private final JTextField lookupReservationIDField = new JTextField();
+    
+    //MakeReservationPanel GUI Data Members
+    
+    
+    //ReservationActiveListPanel GUI Data Members
+    private JFrame reservationActiveListPanel = new JFrame();
+    private final JScrollPane reservationActiveListPane = new JScrollPane();
+    private final JTextField reservationActiveListField = new JTextField();
+    
+    //private final JLabel reservationIDLabel = new JLabel("Reservation ID: ");
+    //private final JTextField reservationIDField = new JTextField();
+    //private final JButton selectReservationButton = new JButton("Select Reservation");
+    //private final JLabel checkinDateLabel = new JLabel("Checkin Date: ");
+    //private final JTextField checkinDateField = new JTextField();
+    
+    
+    int  LogonAttempts = 0;
 
     /**
      * Created by Emmanuel Girin 6/25 - basic structure
@@ -175,6 +215,15 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
         a.displayCustomerManager();
     }
     
+    
+    public HotelReservationProgram() {
+        super("Hotel Reservation System");
+        setSize(LOGIN_X, LOGIN_Y);
+        initializePanels();
+        add(loginPanel);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setVisible(true);
+    }
     
      /**
      * Created by Emmanuel Girin 6/25 - basic structure
@@ -209,7 +258,7 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
      * Display Login GUI prompting user for ID and Password
      * Validate Credentials
      */
-     void displayLogin() {
+    public void displayLogin() {
          
         //anonymous loginButton moved to here, so it could be implemented
         loginButton.addActionListener(new ActionListener(){
@@ -259,7 +308,6 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.setVisible(true);
-
     }
     
     /**
@@ -278,7 +326,6 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(true);
         frame.setVisible(true);
-        
     }
     
     /**
@@ -387,8 +434,9 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
      * 
      * @param e 
      */
-    public void actionPerformed(ActionEvent e){
-        
+    public void actionPerformed(ActionEvent e)
+    {
+
     }
     
     /**
@@ -396,12 +444,14 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
      * initializes all the panels used for the different management screens.
      * Modified by Jacob Valentine 7/07
      * further added more panels to intialize: Customer Manager form panel and Customer Select Panels
+     * Modified by Jacob Valentine 7/10
+     * Addded further panel initialization for Customer Select and Lookup
      */
     public void initializePanels(){
         frame = new JFrame();
         
-        //Initialize the login screen panel.
-        mainPanel = new JPanel(new GridBagLayout());
+        //Initialize the login panel.
+        loginPanel = new JPanel(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
         c.weightx = 1;
@@ -409,39 +459,44 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
         c.gridwidth = 2;
         c.gridx = 0;
         c.gridy = 0;
-        mainPanel.add(loginScreenLabel, c);
+        loginPanel.add(loginScreenLabel, c);
         c.gridwidth = 1;
         c.gridx = 0;
         c.gridy = 1;
-        mainPanel.add(employeeIDLabel, c);
+        loginPanel.add(employeeIDLabel, c);
         c.gridx = 1;
         c.gridy = 1;
-        mainPanel.add(employeeIDField, c);
+        loginPanel.add(employeeIDField, c);
         c.gridx = 0;
         c.gridy = 2;
-        mainPanel.add(passwordLabel, c);
+        loginPanel.add(passwordLabel, c);
         c.gridx = 1;
         c.gridy = 2;
-        mainPanel.add(passwordField, c);
+        loginPanel.add(passwordField, c);
         c.gridx = 0;
         c.gridy = 3;
         c.gridwidth = 2;
-        mainPanel.add(loginButton, c);
+        loginPanel.add(loginButton, c);
         employeeIDField.setEditable(true);
         passwordField.setEditable(true);
+        loginButton.addActionListener(this);
         
-        
-        
-        //Initialize the customer manager screen panel.
-        customerFormPanel = new JPanel(new GridBagLayout());
+        //Initialize the Customer Option Panel
+        customerOptionPanel = new JPanel(new GridBagLayout());
         c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
-        c.weightx = .5;
+        c.weightx = 1;
         c.weighty = 1;
-        c.gridwidth = 1;
+        c.gridwidth = 2;
         c.gridx = 0;
         c.gridy = 0;
-        customerFormPanel.add(logoutCustomerMangerButton, c);
+        customerOptionPanel.add(activeEmployeeIDLabel, c);
+        c.gridx = 0;
+        c.gridy = 1;
+        customerOptionPanel.add(userTypeLabel, c);
+        c.gridx = 0;
+        c.gridy = 2;
+        customerOptionPanel.add(logoutCustomerMangerButton, c);
         customerOptionGroup.add(customerSelectRadioButton);
         customerOptionGroup.add(customerLookupRadioButton);
         customerOptionGroup.add(customerMakeRadioButton);
@@ -453,9 +508,9 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
         c.gridwidth = 1;
         c.gridx = 0;
         c.gridy = 3;
-        customerFormPanel.add(customerOptionBox, c);        
+        customerOptionPanel.add(customerOptionBox, c);        
         
-        //Initialize the SelectCustomerPanel, and set it as the default
+        //Initialize the SelectCustomerPanel
         selectCustomerPanel = new JPanel();
         selectCustomerPanel.setLayout(new BoxLayout(selectCustomerPanel, BoxLayout.LINE_AXIS));
         selectCustomerPanel.add(selectHeaderLabel);
@@ -466,14 +521,105 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
         customerConfirmationBox.setBorder(BorderFactory.createTitledBorder("Confirmation"));
         selectCustomerPanel.add(customerConfirmationBox);
         selectCustomerPanel.add(customerConfirmationButton);
-        c.gridwidth = 2;
-        c.gridheight = 4;
-        c.gridx = 3;
+        selectCustomerIDField.addActionListener(this);
+        selectCustomerIDField.setEditable(true);
+        customerConfirmationTextField.setEditable(false);
+        customerConfirmationButton.addActionListener(this);
+        
+        //Initialize the customer manager screen panel
+        customerFormPanel = new JPanel(new GridLayout(1,2));
+        customerFormPanel.add(customerOptionPanel);
+        customerFormPanel.add(selectCustomerPanel);
+        
+        
+        //Initialize the LookupCustomerPanel
+        lookupCustomerPanel = new JPanel();
+
+        lookupListScrollPanel = new JPanel();
+        lookupListScrollPanel.setLayout(new GridBagLayout());
+        c = new GridBagConstraints();
+        c.fill = GridBagConstraints.BOTH;
+        c.weightx = 1;
+        c.weighty = 1;
+        c.gridx = 0;
         c.gridy = 0;
-        customerFormPanel.add(selectCustomerPanel, c);
-                
+        lookupListScrollPanel.add(lookupCustomerIDLabel, c);
+        c.gridx = 1;
+        c.gridy = 0;
+        lookupListScrollPanel.add(lookupCustomerIDField, c);
+        c.gridx = 0;
+        c.gridy = 1;
+        lookupListScrollPanel.add(lookupCustomerFirstNameLabel, c);
+        c.gridx = 1;
+        c.gridy = 1;
+        lookupListScrollPanel.add(lookupCustomerFirstNameField, c);
+        c.gridx = 0;
+        c.gridy = 2;
+        lookupListScrollPanel.add(lookupCustomerLastNameLabel, c);
+        c.gridx = 1;
+        c.gridy = 2;
+        lookupListScrollPanel.add(lookupCustomerLastNameField, c);
+        c.gridx = 0;
+        c.gridy = 3;
+        lookupListScrollPanel.add(lookupCustomerStreetLabel, c);
+        c.gridx = 1;
+        c.gridy = 3;
+        lookupListScrollPanel.add(lookupCustomerStreetField, c);
+        c.gridx = 0;
+        c.gridy = 4;
+        lookupListScrollPanel.add(lookupCustomerCityLabel, c);
+        c.gridx = 1;
+        c.gridy = 4;
+        lookupListScrollPanel.add(lookupCustomerCityField, c);
+        c.gridx = 0;
+        c.gridy = 5;
+        lookupListScrollPanel.add(lookupCustomerStateLabel, c);
+        c.gridx = 1;
+        c.gridy = 5;
+        lookupListScrollPanel.add(lookupCustomerStateField, c);
+        c.gridx = 0;
+        c.gridy = 6;
+        lookupListScrollPanel.add(lookupCustomerCountryLabel, c);
+        c.gridx = 1;
+        c.gridy = 6;
+        lookupListScrollPanel.add(lookupCustomerCountryField, c);
+        c.gridx = 0;
+        c.gridy = 7;
+        lookupListScrollPanel.add(lookupCustomerPhoneLabel, c);
+        c.gridx = 1;
+        c.gridy = 7;
+        lookupListScrollPanel.add(lookupCustomerPhoneField, c);
+        c.gridx = 0;
+        c.gridy = 8;
+        lookupListScrollPanel.add(lookupCustomerEmailLabel, c);
+        c.gridx = 1;
+        c.gridy = 8;
+        lookupListScrollPanel.add(lookupCustomerEmailField, c);
+        c.gridwidth = 2;
+        c.gridx = 0;
+        c.gridy = 9;
+        lookupListScrollPanel.add(lookupCustomerButton, c);
+        lookupListScrollPane = new JScrollPane(lookupListScrollPanel);
+        lookupCustomerPanel.add(lookupListScrollPane);
+        lookupCustomerIDField.setEditable(true);
+        lookupCustomerFirstNameField.setEditable(true);
+        lookupCustomerLastNameField.setEditable(true);
+        lookupCustomerStreetField.setEditable(true);
+        lookupCustomerCityField.setEditable(true);
+        lookupCustomerStateField.setEditable(true);
+        lookupCustomerCountryField.setEditable(true);
+        lookupCustomerPhoneField.setEditable(true);
+        lookupCustomerEmailField.setEditable(true);
+        lookupCustomerButton.addActionListener(this);
+        
         //Initialize the reservation manager screen panel
         //TODO
+
+    }
+    
+    public static void changeScreen(int currentScreenID, int targetScreenID)
+    {
+    
     }
     
     

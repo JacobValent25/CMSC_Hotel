@@ -50,8 +50,8 @@ class Login {
         
         //create Query String from parameters
         String sql = "SElECT * " +
-                      "From employeeRecords " +
-                      "WHERE id = '" + id + "'" +
+                      "From userRecords " +
+                      "WHERE empID = '" + id + "'" +
                       "AND pass = " + "'" + pass + "'";
         
         //Query database, which returns a result set

@@ -17,11 +17,11 @@ import java.sql.*;
 public class Database {  
    
     //DBC driver name and database URL
-    static final String driver = "com.mysql.jdbc.Driver"; 
-    static final String url = "jdbc:mysql://localhost/hotelManager";
+    static final String driver = "com.mysql.cj.jdbc.Driver"; 
+    static final String url = "jdbc:mysql://localhost:3306/HotelManager";
 
     //Credentials
-    static final String user = "hotelEmployee";
+    static final String user = "root";
     static final String pass = "password";
     
     

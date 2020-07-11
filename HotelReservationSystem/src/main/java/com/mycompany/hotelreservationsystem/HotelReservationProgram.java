@@ -47,11 +47,11 @@ import javax.swing.*;
 
 public class HotelReservationProgram extends JFrame implements ActionListener {
     //Non GUI Data members
-    Login login;
-    ReservationManager resMGR;
-    CustomerManager custMGR;
-    RoomManager roomMGR;
-    Database dbase;
+    private Login login;
+    private ReservationManager resMGR;
+    private CustomerManager custMGR;
+    private RoomManager roomMGR;
+    private Database dbase;
     
     
     //GUI data members
@@ -172,7 +172,7 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
         a.initializePanels();
         a.connectDatabase();
         a.displayLogin();
-        a.displayCustomerManager();
+        //a.displayCustomerManager();
     }
     
     
@@ -186,11 +186,12 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
         try {
             //establish connection to Database
             dbase = new Database();
-            
+          
+          
         //Error needs Modification to display message to user
         } catch (ClassNotFoundException ex) {
             displayMessageToUser("Database Connection Error: ");
-            //Logger.getLogger(HotelReservationProgram.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(HotelReservationProgram.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//end method
     
@@ -254,7 +255,7 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
         
         frame = new JFrame("Hotel Reservation Manager");
         frame.setContentPane(mainPanel);
-        frame.setSize(425, 250);
+        frame.setSize(LOGIN_X, LOGIN_Y);
         frame.setLocationByPlatform(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
@@ -273,8 +274,8 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
         custMGR = new CustomerManager(dbase);
         frame.remove(frame.getContentPane());
         frame.setContentPane(customerFormPanel);
+        frame.setMinimumSize(new Dimension(CUSTOMER_X, CUSTOMER_Y));
         frame.pack();
-        frame.setLocationByPlatform(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(true);
         frame.setVisible(true);

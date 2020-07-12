@@ -53,10 +53,12 @@ class ReservationManager {
         double totalPrice = 0;
         long totalNights = ChronoUnit.DAYS.between(checkIn.toLocalDate(), checkOut.toLocalDate());
         String roomIDstr = "";
+        RoomManager rmgr = new RoomManager(dBase);
         //get cost of each room
         for(int i : roomIDs){
             //add cost of each room
-            totalPrice += RoomManager.lookUpRoom(roomIDs[i], dBase).getNightlyPrice();
+            
+            totalPrice += rmgr.lookUpRoom(roomIDs[i]).getNightlyPrice();
             
             //build str of room IDs separated by , to pass to reservation
             if(i < (roomIDs.length -1)) {

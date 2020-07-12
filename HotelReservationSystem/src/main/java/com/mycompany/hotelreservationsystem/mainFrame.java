@@ -5,616 +5,40 @@
  */
 package com.mycompany.hotelreservationsystem;
 
-import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.*;
 
 /**
  *
- * @author Emmanuel Girin created overall structure
- * @date: 6/25/2020
- * 
- * @author Jacob Valentine added swing variables to begin fleshing out
- * the GUI panels.
- * @date: 6/30/2020
- *
- * @author Jacob Valentine further flesh out the gui panels. Divided the Customer
- * and Reservation Manager screens into seperate Panels dedicated to specific functions
- * for better input/output clarity.
- * @date: 7/07/2020
- * 
- * This class  calls the main function for the program,
- * provides the GUI interface along with the input output for a hotel
- * reservation system. It also establishes a connection to a local SQLite
- * database. 
+ * @author Emmanuel
  */
+public class mainFrame extends javax.swing.JFrame {
 
-/**
- * Created by Emmanuel Girin 6/25 - basic structure added methods, some data values
- * Modified by Jacob Valentine 6/20 - Added additional Swing variables, made 
- * HotelReservationProgram an extension of JFrame, and implemented an actionListenr
- * 
- * Modified by Jacob Valentine 7/07 - Added additional Swing variables, divided 
- * the customer Manager panel into seperate panels for select, lookup, and make options.
- *
- * Modified by Emmanuel Girin 7/10 - Starting Filling out methods and tweaking GUI to build program, added method diplayMessagerToUser(str)
- * 
- * Modified by Jacob Valentine 7/10 - Filled in Variables for the Resevation option menu's Option, Select, and lookup panel.
- */
-
-public class HotelReservationProgram extends JFrame implements ActionListener {
-
-    private static final long serialVersionUID = 1L;
-
-    
-    //Non GUI Data members
-    private Login login;
-    private ReservationManager resMGR;
-    private CustomerManager custMGR;
-    private RoomManager roomMGR;
-    private Database dbase;
-    private int  logonAttempts = 0;
-    private boolean cameFromNewCustomer = true;
-
-    
-    //GUI variables
-    private final int MAIN_X = 676;
-    private final int MAIN_Y = 614;
-    
-    private CardLayout cl;
-                  
-    private javax.swing.JPanel NewCustomerPanel;
-    private javax.swing.JFormattedTextField cdBirthField;
-    private javax.swing.JTextField cdCityField;
-    private javax.swing.JButton cdClearBTN;
-    private javax.swing.JTextField cdCountryField;
-    private javax.swing.JTextField cdEmailField;
-    private javax.swing.JTextField cdFirstNameField;
-    private javax.swing.JTextField cdLastNameField;
-    private javax.swing.JFormattedTextField cdPhoneField;
-    private javax.swing.JTextField cdStateField;
-    private javax.swing.JTextField cdStreetField;
-    private javax.swing.JButton cdSubmitBTN;
-    private javax.swing.JLabel cdTitleLabel;
-    private javax.swing.JPanel customerDisplayPanel;
-    private javax.swing.JPanel erSearchByNamePanel;
-    private javax.swing.JPanel erSearchByNumberPanel;
-    private javax.swing.JButton erSearchNameBTN;
-    private javax.swing.JButton erSearchNumberBTN;
-    private javax.swing.JPanel emailPanel;
-    private javax.swing.JTextField employeeIDField;
-    private javax.swing.JFormattedTextField erCheckInField;
-    private javax.swing.JTextField erFirstNameField;
-    private javax.swing.JTextField erLastNameField;
-    private javax.swing.JTextField erNumberField;
-    private javax.swing.JLabel erTitleLabel;
-    private javax.swing.JButton existingCustomerBTN;
-    private javax.swing.JPanel existingReservationPanel;
-    private javax.swing.JPanel finalizeReservationPanel;
-    private javax.swing.JButton frCancelBTN;
-    private javax.swing.JTextField frCheckInField;
-    private javax.swing.JTextField frCheckOutField;
-    private javax.swing.JTextField frCostField;
-    private javax.swing.JButton frFinalizeBTN;
-    private javax.swing.JTextField frFirstNameField;
-    private javax.swing.JTextField frGuestsField;
-    private javax.swing.JTextField frLastNameField;
-    private javax.swing.JTextField frPhoneField;
-    private javax.swing.JTextField frResNumField;
-    private javax.swing.JTextField frRoomNumbersField;
-    private javax.swing.JTextField frRoomTypeField;
-    private javax.swing.JLabel loginLabel;
-    private javax.swing.JPanel loginPanel;
-    private javax.swing.JButton logoutButton;
-    private javax.swing.JPanel mainCustomerPanel;
-    private javax.swing.JPanel mainPanel;
-    private javax.swing.JPanel mainReservationPanel;
-    private javax.swing.JPanel modifyReservationPanel;
-    private javax.swing.JTextField mrCheckInField;
-    private javax.swing.JTextField mrCheckOutField;
-    private javax.swing.JTextField mrCostField;
-    private javax.swing.JButton mrDeleteBTN;
-    private javax.swing.JButton mainExistingResBTN;
-    private javax.swing.JTextField mrFNameField;
-    private javax.swing.JTextField mrGuestsField;
-    private javax.swing.JTextField mrLNameField;
-    private javax.swing.JButton mrModifyBTN;
-    private javax.swing.JButton mainNewResBTN;
-    private javax.swing.JTextField mrPhoneField;
-    private javax.swing.JTextField mrReservationNumberField;
-    private javax.swing.JTextField mrRoomNumbersField;
-    private javax.swing.JTextField mrRoomTypeField;
-    private javax.swing.JPanel namePanel;
-    private javax.swing.JFormattedTextField ncBirthField;
-    private javax.swing.JTextField ncCityField;
-    private javax.swing.JButton ncClearButton;
-    private javax.swing.JButton nrClearButton;
-    private javax.swing.JTextField ncCountryField;
-    private javax.swing.JTextField ncEmailField;
-    private javax.swing.JTextField ncFirstNameField;
-    private javax.swing.JTextField ncLastNameField;
-    private javax.swing.JFormattedTextField ncPhoneField;
-    private javax.swing.JTextField ncStateField;
-    private javax.swing.JTextField ncStreetField;
-    private javax.swing.JButton ncSubmitBTN;
-    private javax.swing.JButton nrSubmitBTN;
-    private javax.swing.JLabel ncTitleLabel;
-    private javax.swing.JButton newCustomerBTN;
-    private javax.swing.JPanel newReservationPanel;
-    private javax.swing.JFormattedTextField nrCheckInField;
-    private javax.swing.JFormattedTextField nrCheckOutField;
-    private javax.swing.JTextField nrGuestField;
-    private javax.swing.JTextField nrRoomsField;
-    private javax.swing.JLabel nrTitleLabel;
-    private javax.swing.JPasswordField passwordField;
-    private javax.swing.JPanel phonePanel;
-    private javax.swing.JButton returnCustomerBTN;
-    private javax.swing.JComboBox<String> roomTypeComboBox;
-    private javax.swing.JTextField searchCustomerEmailField;
-    private javax.swing.JTextField searchCustomerFirstNameField;
-    private javax.swing.JTextField searchCustomerLastNameField;
-    private javax.swing.JPanel searchCustomerPanel;
-    private javax.swing.JFormattedTextField searchCustomerPhoneField;
-    private javax.swing.JButton searchEmailBTN;
-    private javax.swing.JButton searchNameBTN;
-    private javax.swing.JButton searchPhoneBTN;
-    private javax.swing.JButton validateCredentialsBTN;
-   
-    public HotelReservationProgram(){
-        super("Hotel Reservation System");
-        initializeMainDisplay();
-        connectDatabase();
-        
-    }
-      
     /**
-     * Created by Emmanuel Girin 6/25 - basic structure
-     * @param args the command line arguments
+     * Creates new form mainFrame
      */
-    public static void main(String[] args) {
-        // TODO code application logic here
-          java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new HotelReservationProgram().setVisible(true);
-            }
-        });
+    public mainFrame() {
+        initComponents();
     }
 
-    
-     /**
-     * Created by Emmanuel Girin 6/25 - basic structure
-     * Modified 7/6 by EG to create Database Object
-     * Connects to the local SQL database on client machine
-     * Catches and handles a database connection error
-     */
-    private void connectDatabase() {
-        try {
-            //establish connection to Database
-            dbase = new Database();
-          
-          
-        //Error needs Modification to display message to user
-        } catch (ClassNotFoundException ex) {
-            displayMessageToUser("Database Connection Error: ");
-            Logger.getLogger(HotelReservationProgram.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//end method
-    
     /**
-     * Created: 7/9 EG
-     * Displays Messages to users, can be used for errors or general messaging
-     * @param str 
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
-    void displayMessageToUser(String str){
-        JOptionPane.showMessageDialog(null, str);
-    }
-   
-    
-    /**
-     * Created 7/9 EG
-     * Displays Login Screen Resets Fields to ""
-     */
-    private void displayLogin() {
-            employeeIDField.setText("");
-            passwordField.setText("");
-            
-            //show Login Screen
-            cl.show(mainPanel, "card11");
-             
-            logoutButton.setEnabled(false);
-            returnCustomerBTN.setEnabled(false);
-         
-    }
-    
-    /**
-     * Created 7/9 EG
-     * Validates Credentials from Login Screen
-     */
-    private void validateCredentials() {
-            
-            if(logonAttempts < 4){
-                //if the fields have data in them check them out, else display msg
-                if(!employeeIDField.getText().equals("") & passwordField.getText() != null){
-                    try {
-                        //create a new login object and pass it the dbase
-                        login = new Login(dbase);
-                        
-                        
-                        //set proceed = to whether or not the credentials are valid
-                        boolean proceed = login.validateCredentials(employeeIDField.getText(), passwordField.getText());
-                        
-                        //increment counter of login attempts
-                        logonAttempts++;
-                        
-                        //if valid proceed to next screen
-                        if(proceed){
-                            //reset counter
-                            logonAttempts = 0;
-                            
-                            //Clear Text Fields
-                            employeeIDField.setText("");
-                            passwordField.setText("");
-                            
-                            //Enable logout button
-                            logoutButton.setEnabled(true);
-                            
-                            //create new Customer Manager
-                            custMGR = new CustomerManager(dbase);
-                            
-                            //show main Customer Panel
-                            cl.show(mainPanel, "card2");
-                        }
-                        else {
-                            //display error message with count of login attempts
-                            displayMessageToUser(login.getMessage() + "\n Attempt #:  " 
-                                                + logonAttempts + " of 5");
-                            //reset to blank
-                            employeeIDField.setText("");
-                            passwordField.setText("");
-                        }
-                    }   
-                    catch (SQLException ex) {
-                        //error handling display SQL Error Message to User
-                        if(ex.getMessage() != null) {
-                            displayMessageToUser("SQL Error: " + ex.getLocalizedMessage());
-                        }
-                    } 
-                }
-                else {
-                    displayMessageToUser("Error: One of the Fields is Blank");
-                }
-                }
-            else {
-                //Message displayed to USER
-                displayMessageToUser("Error: User exceeded Logon Attempts. LOCKED OUT");
-                
-                //Disable fields and button
-                employeeIDField.setText("");
-                passwordField.setText("");
-                employeeIDField.setEnabled(false);
-                passwordField.setEnabled(false);
-                validateCredentialsBTN.setEnabled(false);
-            }                                       
-    }
-    
-    
-    /**
-     * Created: EG 7/12
-     * Displays Main Customer Screen
-     * @param evt 
-     */
-    private void displayMainCustomer() {
-        //disable button
-        returnCustomerBTN.setEnabled(false);
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
 
-        //show customer select screen
-        cl.show(mainPanel, "card2");
-    }
-    
-    /**
-     * Created by Emmanuel Girin 6/25 - basic structure
-     * Modified: 7/10 by EG to include body, logic, and GUI elements
-     * Display Login GUI prompting user for ID and Password
-     * Validate Credentials
-     */
-   
-    /**
-     * Created 7/12 by EG
-     * Displays new Customer creation Screen
-     * @param evt 
-     */
-    private void displayNewCustomer() {                                               
-        //show create new customer screen
-        cl.show(mainPanel, "card4");
-        
-        ncFirstNameField.setText("");
-        ncLastNameField.setText("");
-        ncBirthField.setText("0001-01-01");
-        ncPhoneField.setText("000-000-0000");
-        ncStreetField.setText("");
-        ncCityField.setText("");
-        ncStateField.setText("");
-        ncCountryField.setText("");
-        ncEmailField.setText("");
-        
-        //let program know that we are creating an new customer
-        cameFromNewCustomer = true;
-        
-        //reenable return to customer select button
-        returnCustomerBTN.setEnabled(true);
-    }
-    
-    
-    private void displayCustomerDetails() {
-        //display Screen
-        cl.show(mainPanel, "card10");
-        
-        if(cameFromNewCustomer){
-            //create Customer Data into String Array
-            String[] custData = new String[10];
-            //set ID to Default
-            custData[0] = "-1";
-            custData[1] = ncFirstNameField.getText();
-            custData[2] = ncLastNameField.getText();
-            custData[3] = ncStreetField.getText();
-            custData[4] = ncCityField.getText();
-            custData[5] = ncStateField.getText();
-            custData[6] = ncCountryField.getText();
-            custData[7] = ncPhoneField.getText();
-            custData[8] = ncEmailField.getText();
-            custData[9] = ncBirthField.getText();
-            
-            try {
-                //create Customer in SQL
-                custMGR.createCustomer(custData);
-            } catch (SQLException ex) {
-                displayMessageToUser("ERROR: Customer could not be Created");
-                System.out.println(ex.getMessage());
-            }
-        }
-        
-        Customer c = custMGR.getCustomer();
-        
-        //Display Data
-        cdFirstNameField.setText(c.getFirstName());
-        cdLastNameField.setText(c.getLastName());
-        cdBirthField.setText(c.getDateOfBirth().toString());
-        cdPhoneField.setText(c.getPhone());
-        cdStreetField.setText(c.getStreet());
-        cdCityField.setText(c.getCity());
-        cdStateField.setText(c.getState());
-        cdCountryField.setText(c.getCountry());
-        cdEmailField.setText(c.getEmail());
-    }
-
-    
-    /**
-     * Created: 7/12 by EG
-     * Displays Existing Customer Look up Screen
-     * @param evt 
-     */
-    private void displayExistingCustomer() {                                                    
-        //show existing customer screen
-        cl.show(mainPanel, "card3");
-        
-        //reenable return to customer select button
-        returnCustomerBTN.setEnabled(true);
-    }
-    
-    private void displayMainReservation(){
-        //create new reservationMGR
-        resMGR = new ReservationManager(dbase);
-        
-        //navigate to MainReservation
-        cl.show(mainPanel, "card5");
-    }
-    
-    private void displayNewReservation(){
-        //scrub data if there is any
-        nrCheckInField.setText("0001-01-01");
-        nrCheckOutField.setText("0001-01-01");
-        nrRoomsField.setText("1");
-        nrGuestField.setText("1");
-        
-        //show the panel
-        cl.show(mainPanel, "card6");
-    }
-    
-    private void displayExistingReservation(){
-        //clear data
-        erCheckInField.setText("");
-        erFirstNameField.setText("");
-        erLastNameField.setText("");
-        erNumberField.setText("");
-        
-        //display Panel
-        cl.show(mainPanel, "card7");
-    }
-    
-    private void searchForAvailableRooms(){
-        roomMGR = new RoomManager(dbase);
-    }
-    
-    /**
-     * Created: 7/12 by EG
-     * Looks up Customer by Name
-     * If found sends user to display customer info screen
-     * @param evt 
-     */
-    private void searchNameBTNActionPerformed() {
-        String fName = searchCustomerFirstNameField.getText();
-        String lName = searchCustomerLastNameField.getText();
-        if(!"".equals(fName) && !"".equals(lName)){
-            boolean isFound = false;
-            try {
-                isFound = custMGR.lookUpCustomerByName(fName, lName);
-            } catch (SQLException ex) {
-                displayMessageToUser("ERROR: Database Error Try Again!");
-                System.out.println(ex.getMessage());
-            }
-            if(isFound){
-                //set boolean to false
-                cameFromNewCustomer = false;
-
-                //display Reservation Manager
-                displayCustomerDetails();
-            }
-            else {
-                //try again message
-                displayMessageToUser("Look up Failed. Try Again!");
-            }
-        }
-        else {
-            displayMessageToUser("Fill out BOTH Name Fields!");
-        }
-    }
-    
-    /**
-     * Created: 7/12 by EG
-     * Looks up Customer by Email
-     * If found sends user to display customer info screen
-     * @param evt 
-     */
-    private void searchEmailBTNActionPerformed(ActionEvent evt){
-        String str = searchCustomerEmailField.getText();
-        if(!"".equals(str)){
-            boolean isFound = false;
-            try {
-                isFound = custMGR.lookUpCustomerByEmail(str);
-            } catch (SQLException ex) {
-                displayMessageToUser("ERROR: Database Error Try Again!");
-                System.out.println(ex.getMessage());
-            }
-            if(isFound){
-                //set boolean to false
-                cameFromNewCustomer = false;
-
-                //display Reservation Manager
-                displayCustomerDetails();
-            }
-            else {
-                //try again message
-                displayMessageToUser("Look up Failed. Try Again!");
-            }
-        }
-        else
-            //Email is not filled
-            displayMessageToUser("Fill out Email Field");
-    }
-    
-    /**
-     * Created: 7/12 by EG
-     * Looks up Customer by Phone Number
-     * If found sends user to display customer info screen
-     * @param evt 
-     */
-    private void searchPhoneBTNActionPerformed(ActionEvent evt) {
-        String str = searchCustomerPhoneField.getText();
-        if(!"".equals(str)){
-            boolean isFound = false;
-            try {
-                isFound = custMGR.lookUpCustomerByPhone(str);
-            } catch (SQLException ex) {
-                displayMessageToUser("ERROR: Database Error Try Again!");
-                System.out.println(ex.getMessage());
-            }
-            if(isFound){
-                //set boolean to false
-                cameFromNewCustomer = false;
-                
-                
-                //display Reservation Manager
-                displayCustomerDetails();
-            }
-            else {
-                //try again message
-                displayMessageToUser("Look up Failed. Try Again!");
-            }
-        }
-        else {
-            //Email is not filled
-            displayMessageToUser("Fill out Phone Field");
-        }  
-    }
-    
-    private void deleteReservation(){
-        //Delete Reservation
-        try {
-            resMGR.deleteReservation();
-        } catch (SQLException ex) {
-            displayMessageToUser("ERROR: Database Error Try Again!");
-            System.out.println(ex.getMessage());
-        }
-        
-        //Head Back to Main Reservation Screen
-        displayMainReservation();
-    }
-    
-    
-    private void displayReservationDetails() {
-        //navigate to finalize screen
-        
-        Reservation r = resMGR.getCurrentReservation();
-        Customer c = custMGR.getCustomer();
-        
-        int[] roomIDs = roomMGR.getSelectedRoomIDs();
-        String roomNumbers = "";
-        String roomTypes = "";
-        Room room = new Room();
-        
-        for (int i = 0; i < roomIDs.length; i++){
-            try {
-                room = roomMGR.lookUpRoom(roomIDs[i]);
-            } catch (SQLException | DatabaseException ex) {
-               displayMessageToUser("ERROR: SQL Error Try Again");
-               System.out.println(ex.getMessage());
-            }
-            if(i < (roomIDs.length-1)){
-                roomNumbers += room.getRoomID() + ", ";
-                roomTypes += room.getTypeAsString() + ", ";
-            }
-            else{
-                roomNumbers += room.getRoomID();
-                roomTypes += room.getTypeAsString();
-            }
-        }
-        
-        //display data to panel
-        frCheckInField.setText(r.getCheckIn().toString());
-        frCheckOutField.setText(r.getCheckOut().toString());
-        frCostField.setText("" + r.getTotalCost());
-        frResNumField.setText("" + r.getReservationID());
-        frRoomNumbersField.setText(roomNumbers);
-        frRoomTypeField.setText(roomTypes);
-        frPhoneField.setText(c.getPhone());
-        frFirstNameField.setText(c.getFirstName());
-        frLastNameField.setText(c.getLastName());
-        frGuestsField.setText("" + r.getNumOfGuests());
-    }
-    
-    private void finalizeReservation() {
-        ;
-    }
-
-
- 
-  
-    private void initializeMainDisplay(){
-        
         mainPanel = new javax.swing.JPanel();
-        mainCustomerPanel = new javax.swing.JPanel();
         loginPanel = new javax.swing.JPanel();
         loginLabel = new javax.swing.JLabel();
         employeeIDField = new javax.swing.JTextField();
         passwordField = new javax.swing.JPasswordField();
         validateCredentialsBTN = new javax.swing.JButton();
-        newCustomerBTN = new javax.swing.JButton();
+        mainCustomerPanel = new javax.swing.JPanel();
         existingCustomerBTN = new javax.swing.JButton();
+        newCustomerBTN = new javax.swing.JButton();
         searchCustomerPanel = new javax.swing.JPanel();
         searchNameBTN = new javax.swing.JButton();
         searchPhoneBTN = new javax.swing.JButton();
@@ -640,27 +64,27 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
         ncClearButton = new javax.swing.JButton();
         ncSubmitBTN = new javax.swing.JButton();
         mainReservationPanel = new javax.swing.JPanel();
-        mainNewResBTN = new javax.swing.JButton();
-        mainExistingResBTN = new javax.swing.JButton();
+        mrNewReservationBTN = new javax.swing.JButton();
+        mrExistingReservationBTN = new javax.swing.JButton();
         newReservationPanel = new javax.swing.JPanel();
         nrCheckOutField = new javax.swing.JFormattedTextField();
         nrTitleLabel = new javax.swing.JLabel();
-        nrClearButton = new javax.swing.JButton();
-        nrSubmitBTN = new javax.swing.JButton();
+        ncClearButton2 = new javax.swing.JButton();
+        ncSubmitBTN2 = new javax.swing.JButton();
         nrRoomsField = new javax.swing.JTextField();
         nrCheckInField = new javax.swing.JFormattedTextField();
         roomTypeComboBox = new javax.swing.JComboBox<>();
         nrGuestField = new javax.swing.JTextField();
         existingReservationPanel = new javax.swing.JPanel();
-        erSearchByNumberPanel = new javax.swing.JPanel();
+        ecSearchByNumberPanel = new javax.swing.JPanel();
         erNumberField = new javax.swing.JTextField();
         erTitleLabel = new javax.swing.JLabel();
-        erSearchByNamePanel = new javax.swing.JPanel();
+        ecSearchByNamePanel = new javax.swing.JPanel();
         erFirstNameField = new javax.swing.JTextField();
         erLastNameField = new javax.swing.JTextField();
         erCheckInField = new javax.swing.JFormattedTextField();
-        erSearchNameBTN = new javax.swing.JButton();
-        erSearchNumberBTN = new javax.swing.JButton();
+        ecSearchNameBTN = new javax.swing.JButton();
+        ecSearchNumberBTN = new javax.swing.JButton();
         customerDisplayPanel = new javax.swing.JPanel();
         cdPhoneField = new javax.swing.JFormattedTextField();
         cdFirstNameField = new javax.swing.JTextField();
@@ -705,12 +129,10 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Hotel Manager Program");
-        
-        cl = new java.awt.CardLayout();
-        
+
         mainPanel.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        mainPanel.setLayout(cl);
-        
+        mainPanel.setLayout(new java.awt.CardLayout());
+
         loginLabel.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         loginLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         loginLabel.setText("Login");
@@ -724,9 +146,8 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
         validateCredentialsBTN.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         validateCredentialsBTN.setText("Validate Credentials");
         validateCredentialsBTN.addActionListener(new java.awt.event.ActionListener() {
-            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                validateCredentials();
+                validateCredentialsBTNActionPerformed(evt);
             }
         });
 
@@ -769,18 +190,16 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
         existingCustomerBTN.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         existingCustomerBTN.setText("Existing Customer");
         existingCustomerBTN.addActionListener(new java.awt.event.ActionListener() {
-            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                displayExistingCustomer();
+                existingCustomerBTNActionPerformed(evt);
             }
         });
 
         newCustomerBTN.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         newCustomerBTN.setText("New Customer");
         newCustomerBTN.addActionListener(new java.awt.event.ActionListener() {
-            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                displayNewCustomer();
+                newCustomerBTNActionPerformed(evt);
             }
         });
 
@@ -809,30 +228,12 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
 
         searchNameBTN.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         searchNameBTN.setText("Search Name");
-        searchNameBTN.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                searchNameBTNActionPerformed();
-            }
-        });
-
-        searchEmailBTN.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        searchEmailBTN.setText("Search Email");
-        searchEmailBTN.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                searchEmailBTNActionPerformed(evt);
-            }
-        });
 
         searchPhoneBTN.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        searchPhoneBTN.setText("Search Phone");
-        searchPhoneBTN.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                searchPhoneBTNActionPerformed(evt);
-            }
-        });
+        searchPhoneBTN.setText("Search Email");
+
+        searchEmailBTN.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        searchEmailBTN.setText("Search Phone");
 
         namePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Search by Name", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 14))); // NOI18N
         namePanel.setPreferredSize(new java.awt.Dimension(175, 25));
@@ -868,7 +269,7 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
         try {
             searchCustomerPhoneField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###-###-####")));
         } catch (java.text.ParseException ex) {
-            displayMessageToUser("ERROR: Incorrect Phone Number");
+            ex.printStackTrace();
         }
 
         javax.swing.GroupLayout phonePanelLayout = new javax.swing.GroupLayout(phonePanel);
@@ -917,7 +318,7 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
             .addGroup(searchCustomerPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(namePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 69, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 72, Short.MAX_VALUE)
                 .addComponent(phonePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(58, 58, 58)
                 .addComponent(emailPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -926,9 +327,9 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
                 .addGap(32, 32, 32)
                 .addComponent(searchNameBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(searchPhoneBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(110, 110, 110)
                 .addComponent(searchEmailBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(110, 110, 110)
+                .addComponent(searchPhoneBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(31, 31, 31))
         );
         searchCustomerPanelLayout.setVerticalGroup(
@@ -954,9 +355,8 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
         ncPhoneField.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Phone Number", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
         try {
             ncPhoneField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###-###-####")));
-        } catch (java.text.ParseException ex){
-            //display Error
-            displayMessageToUser("ERROR: Incorrect Phone Number Format");
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
         }
 
         ncFirstNameField.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "First Name", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
@@ -984,38 +384,9 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
 
         ncClearButton.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         ncClearButton.setText("Clear");
-        ncClearButton.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                displayNewCustomer();
-            }
-        });
 
         ncSubmitBTN.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         ncSubmitBTN.setText("Submit");
-        ncSubmitBTN.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                boolean dataIsEntered = true;
-                //check data
-                if(ncBirthField.getText().equals("0000-01-01"))
-                    dataIsEntered = false;
-                if(ncPhoneField.getText().equals("000-000-0000"))
-                    dataIsEntered = false;
-                if(ncFirstNameField.getText().equals(""))
-                    dataIsEntered = false;
-                if(ncLastNameField.getText().equals(""))
-                    dataIsEntered = false;
-                if(ncEmailField.getText().equals(""))
-                    dataIsEntered = false;
-                
-                //proceed to next screen or display error
-                if(dataIsEntered)
-                    displayCustomerDetails();
-                else
-                    displayMessageToUser("Error: Missing Field");
-            }
-        });
 
         javax.swing.GroupLayout NewCustomerPanelLayout = new javax.swing.GroupLayout(NewCustomerPanel);
         NewCustomerPanel.setLayout(NewCustomerPanelLayout);
@@ -1081,45 +452,33 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
                     .addComponent(ncSubmitBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(115, Short.MAX_VALUE))
         );
-        
+
         mainPanel.add(NewCustomerPanel, "card4");
 
-        mainNewResBTN.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        mainNewResBTN.setText("New Reservation");
-        mainNewResBTN.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                //display New Reservation Panel
-                displayNewReservation();
-            }
-        });
+        mrNewReservationBTN.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        mrNewReservationBTN.setText("New Reservation");
 
-        mainExistingResBTN.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        mainExistingResBTN.setText("Existing Reservation");
-        mainExistingResBTN.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                //display Existing Reservation Panel
-                displayExistingReservation();
-            }
-        });
+        mrExistingReservationBTN.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        mrExistingReservationBTN.setText("Existing Reservation");
 
         javax.swing.GroupLayout mainReservationPanelLayout = new javax.swing.GroupLayout(mainReservationPanel);
         mainReservationPanel.setLayout(mainReservationPanelLayout);
-        mainReservationPanelLayout.setHorizontalGroup(mainReservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        mainReservationPanelLayout.setHorizontalGroup(
+            mainReservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainReservationPanelLayout.createSequentialGroup()
                 .addGap(68, 68, 68)
-                .addComponent(mainNewResBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 76, Short.MAX_VALUE)
-                .addComponent(mainExistingResBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(mrNewReservationBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 79, Short.MAX_VALUE)
+                .addComponent(mrExistingReservationBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(59, 59, 59))
         );
-        mainReservationPanelLayout.setVerticalGroup(mainReservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        mainReservationPanelLayout.setVerticalGroup(
+            mainReservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mainReservationPanelLayout.createSequentialGroup()
                 .addGap(191, 191, 191)
                 .addGroup(mainReservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(mainExistingResBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(mainNewResBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(mrExistingReservationBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(mrNewReservationBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(319, Short.MAX_VALUE))
         );
 
@@ -1129,8 +488,7 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
         try {
             nrCheckOutField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("####-##-##")));
         } catch (java.text.ParseException ex) {
-            //display Error Message
-            displayMessageToUser("ERROR: Incorrect Input in CheckOut");
+            ex.printStackTrace();
         }
         nrCheckOutField.setPreferredSize(new java.awt.Dimension(15, 40));
 
@@ -1138,56 +496,11 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
         nrTitleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         nrTitleLabel.setText("New Reservation Information");
 
-        nrClearButton.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        nrClearButton.setText("Clear");
-        nrClearButton.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                //display Existing Reservation Panel
-                cl.show(mainPanel, "card7");
-            }
-        });
+        ncClearButton2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        ncClearButton2.setText("Clear");
 
-        nrSubmitBTN.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        nrSubmitBTN.setText("Submit");
-        nrSubmitBTN.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                boolean fieldsFilled = true;
-              
-                //check if data is filled
-                if (nrCheckInField.getText().equals("0001-01-01"))
-                    fieldsFilled = false;
-                if (nrCheckOutField.getText().equals("0001-01-01"))
-                    fieldsFilled = false;
-                if (nrRoomsField.getText().equals(""))
-                    fieldsFilled = false;
-                if (nrGuestField.getText().equals(""))
-                    fieldsFilled = false;
-                
-                
-                
-                if (fieldsFilled){
-                    String checkIn = nrCheckInField.getText();
-                    String checkOut = nrCheckOutField.getText();
-                    int numRooms = Integer.parseInt(nrRoomsField.getText());
-                    int prefType = roomTypeComboBox.getSelectedIndex();
-                    System.out.println(roomTypeComboBox.getSelectedIndex());
-                    roomMGR = new RoomManager(dbase, checkIn, checkOut, prefType, numRooms);
-                }
-                
-                try {
-                    roomMGR.searchAvailableRooms();
-                } catch (Exception ex) {
-                    displayMessageToUser("Error: SQL ");
-                    System.out.println(ex.getMessage());
-                }
-                        
-                    
-                //display Existing Reservation Panel
-                displayReservationDetails();
-            }
-        });
+        ncSubmitBTN2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        ncSubmitBTN2.setText("Submit");
 
         nrRoomsField.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "# of Rooms", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
 
@@ -1195,10 +508,10 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
         try {
             nrCheckInField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("####-##-##")));
         } catch (java.text.ParseException ex) {
-            displayMessageToUser("Error: Incorrect Date");
+            ex.printStackTrace();
         }
         nrCheckInField.setPreferredSize(new java.awt.Dimension(15, 40));
-        
+
         roomTypeComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ALL", "Single", "Double", "King", "Suite" }));
         roomTypeComboBox.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Room Type", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
 
@@ -1206,7 +519,8 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
 
         javax.swing.GroupLayout newReservationPanelLayout = new javax.swing.GroupLayout(newReservationPanel);
         newReservationPanel.setLayout(newReservationPanelLayout);
-        newReservationPanelLayout.setHorizontalGroup(newReservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        newReservationPanelLayout.setHorizontalGroup(
+            newReservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(newReservationPanelLayout.createSequentialGroup()
                 .addGap(85, 85, 85)
                 .addGroup(newReservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -1222,14 +536,15 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
                         .addComponent(nrCheckOutField, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE))))
             .addGroup(newReservationPanelLayout.createSequentialGroup()
                 .addGap(99, 99, 99)
-                .addComponent(nrSubmitBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(ncSubmitBTN2, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(100, 100, 100)
-                .addComponent(nrClearButton, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(ncClearButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(newReservationPanelLayout.createSequentialGroup()
                 .addGap(168, 168, 168)
                 .addComponent(nrTitleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
-        newReservationPanelLayout.setVerticalGroup(newReservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        newReservationPanelLayout.setVerticalGroup(
+            newReservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(newReservationPanelLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addComponent(nrTitleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1244,19 +559,19 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
                     .addComponent(nrGuestField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(149, 149, 149)
                 .addGroup(newReservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(nrClearButton, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(nrSubmitBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(ncClearButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ncSubmitBTN2, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(117, Short.MAX_VALUE))
         );
 
         mainPanel.add(newReservationPanel, "card6");
 
-        erSearchByNumberPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Search by Reservation Number", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12))); // NOI18N
+        ecSearchByNumberPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Search by Reservation Number", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12))); // NOI18N
 
         erNumberField.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Reservation #", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
 
-        javax.swing.GroupLayout ecSearchByNumberPanelLayout = new javax.swing.GroupLayout(erSearchByNumberPanel);
-        erSearchByNumberPanel.setLayout(ecSearchByNumberPanelLayout);
+        javax.swing.GroupLayout ecSearchByNumberPanelLayout = new javax.swing.GroupLayout(ecSearchByNumberPanel);
+        ecSearchByNumberPanel.setLayout(ecSearchByNumberPanelLayout);
         ecSearchByNumberPanelLayout.setHorizontalGroup(
             ecSearchByNumberPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(ecSearchByNumberPanelLayout.createSequentialGroup()
@@ -1276,7 +591,7 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
         erTitleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         erTitleLabel.setText("Existing Reservation Lookup");
 
-        erSearchByNamePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Search by Name", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12))); // NOI18N
+        ecSearchByNamePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Search by Name", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12))); // NOI18N
 
         erFirstNameField.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "First Name", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
 
@@ -1287,12 +602,12 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
         try {
             erCheckInField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("####-##-##")));
         } catch (java.text.ParseException ex) {
-            displayMessageToUser("ERROR: Incorrect Date");
+            ex.printStackTrace();
         }
         erCheckInField.setPreferredSize(new java.awt.Dimension(15, 40));
 
-        javax.swing.GroupLayout ecSearchByNamePanelLayout = new javax.swing.GroupLayout(erSearchByNamePanel);
-        erSearchByNamePanel.setLayout(ecSearchByNamePanelLayout);
+        javax.swing.GroupLayout ecSearchByNamePanelLayout = new javax.swing.GroupLayout(ecSearchByNamePanel);
+        ecSearchByNamePanel.setLayout(ecSearchByNamePanelLayout);
         ecSearchByNamePanelLayout.setHorizontalGroup(
             ecSearchByNamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(ecSearchByNamePanelLayout.createSequentialGroup()
@@ -1316,44 +631,46 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
                 .addContainerGap(18, Short.MAX_VALUE))
         );
 
-        erSearchNameBTN.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        erSearchNameBTN.setText("Search Name");
+        ecSearchNameBTN.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        ecSearchNameBTN.setText("Search Name");
 
-        erSearchNumberBTN.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        erSearchNumberBTN.setText("Search Number");
+        ecSearchNumberBTN.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        ecSearchNumberBTN.setText("Search Number");
 
         javax.swing.GroupLayout existingReservationPanelLayout = new javax.swing.GroupLayout(existingReservationPanel);
         existingReservationPanel.setLayout(existingReservationPanelLayout);
-        existingReservationPanelLayout.setHorizontalGroup(existingReservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        existingReservationPanelLayout.setHorizontalGroup(
+            existingReservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(existingReservationPanelLayout.createSequentialGroup()
                 .addGap(167, 167, 167)
                 .addComponent(erTitleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(existingReservationPanelLayout.createSequentialGroup()
                 .addGap(37, 37, 37)
-                .addComponent(erSearchByNumberPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 93, Short.MAX_VALUE)
-                .addComponent(erSearchByNamePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(ecSearchByNumberPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 96, Short.MAX_VALUE)
+                .addComponent(ecSearchByNamePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(42, 42, 42))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, existingReservationPanelLayout.createSequentialGroup()
                 .addGap(82, 82, 82)
-                .addComponent(erSearchNumberBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(ecSearchNumberBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(erSearchNameBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(ecSearchNameBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(87, 87, 87))
         );
-        existingReservationPanelLayout.setVerticalGroup(existingReservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        existingReservationPanelLayout.setVerticalGroup(
+            existingReservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(existingReservationPanelLayout.createSequentialGroup()
                 .addGap(26, 26, 26)
                 .addComponent(erTitleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(120, 120, 120)
                 .addGroup(existingReservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(erSearchByNumberPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(erSearchByNamePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(ecSearchByNumberPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(ecSearchByNamePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(32, 32, 32)
                 .addGroup(existingReservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(erSearchNumberBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(erSearchNameBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(ecSearchNumberBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ecSearchNameBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(113, Short.MAX_VALUE))
         );
 
@@ -1366,7 +683,7 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
         try {
             cdPhoneField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###-###-####")));
         } catch (java.text.ParseException ex) {
-            displayMessageToUser("ERROR: Incorrect Phone Number");
+            ex.printStackTrace();
         }
 
         cdFirstNameField.setEditable(false);
@@ -1401,22 +718,18 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
         cdTitleLabel.setText("Customer Information");
 
         cdClearBTN.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        cdClearBTN.setText("Cancel");
+        cdClearBTN.setText("Clear");
         cdClearBTN.addActionListener(new java.awt.event.ActionListener() {
-            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                //Goes back to Main Customer Panel
-                displayMainCustomer();
+                cdClearBTNActionPerformed(evt);
             }
-            });
+        });
 
         cdSubmitBTN.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        cdSubmitBTN.setText("Select Customer");
+        cdSubmitBTN.setText("Submit");
         cdSubmitBTN.addActionListener(new java.awt.event.ActionListener() {
-            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                //Redisplays Panel
-                displayMainReservation();
+                cdSubmitBTNActionPerformed(evt);
             }
         });
 
@@ -1455,7 +768,7 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
                     .addGroup(customerDisplayPanelLayout.createSequentialGroup()
                         .addGap(168, 168, 168)
                         .addComponent(cdTitleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(92, Short.MAX_VALUE))
+                .addContainerGap(95, Short.MAX_VALUE))
         );
         customerDisplayPanelLayout.setVerticalGroup(
             customerDisplayPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1521,23 +834,10 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
 
         mrDeleteBTN.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         mrDeleteBTN.setText("Delete Reservation");
-        mrDeleteBTN.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                //Redisplays Panel
-                deleteReservation();
-            }
-        });
-        
+        mrDeleteBTN.setActionCommand("Delete Reservation");
+
         mrModifyBTN.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         mrModifyBTN.setText("Modify Reservation");
-        mrModifyBTN.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deleteReservation();
-                
-            }
-        });
 
         javax.swing.GroupLayout modifyReservationPanelLayout = new javax.swing.GroupLayout(modifyReservationPanel);
         modifyReservationPanel.setLayout(modifyReservationPanelLayout);
@@ -1556,7 +856,7 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
                                 .addComponent(mrFNameField, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(mrLNameField, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 125, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 128, Short.MAX_VALUE)
                                 .addComponent(mrPhoneField, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(modifyReservationPanelLayout.createSequentialGroup()
                                 .addGroup(modifyReservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1641,23 +941,9 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
 
         frCancelBTN.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         frCancelBTN.setText("Cancel Reservation");
-        frCancelBTN.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                //Redisplays Panel
-                displayMainReservation();
-            }
-        });
 
         frFinalizeBTN.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         frFinalizeBTN.setText("Finalize Reservation");
-        frFinalizeBTN.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                //Redisplays Panel
-                finalizeReservation();
-            }
-        });
 
         javax.swing.GroupLayout finalizeReservationPanelLayout = new javax.swing.GroupLayout(finalizeReservationPanel);
         finalizeReservationPanel.setLayout(finalizeReservationPanelLayout);
@@ -1676,7 +962,7 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
                                 .addComponent(frFirstNameField, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(frLastNameField, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 125, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 128, Short.MAX_VALUE)
                                 .addComponent(frPhoneField, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(finalizeReservationPanelLayout.createSequentialGroup()
                                 .addGroup(finalizeReservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1729,22 +1015,17 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
 
         logoutButton.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         logoutButton.setText("LOGOUT");
-        logoutButton.setEnabled(false);
         logoutButton.addActionListener(new java.awt.event.ActionListener() {
-            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                displayLogin();
+                logoutButtonActionPerformed(evt);
             }
-
         });
 
         returnCustomerBTN.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        returnCustomerBTN.setEnabled(false);
-        returnCustomerBTN.setText("Return to Customer Select");
+        returnCustomerBTN.setText("Return to Customer Screen");
         returnCustomerBTN.addActionListener(new java.awt.event.ActionListener() {
-            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                displayMainCustomer();
+                returnCustomerBTNActionPerformed(evt);
             }
         });
 
@@ -1769,17 +1050,168 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
         );
 
         pack();
-        
+    }// </editor-fold>//GEN-END:initComponents
 
+    private void logoutButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_logoutButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_logoutButtonActionPerformed
+
+    private void returnCustomerBTNActionPerformed(ActionEvent evt) {//GEN-FIRST:event_returnCustomerBTNActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_returnCustomerBTNActionPerformed
+
+    private void validateCredentialsBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_validateCredentialsBTNActionPerformed
+                    //As long 
+    }//GEN-LAST:event_validateCredentialsBTNActionPerformed
+
+    private void newCustomerBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newCustomerBTNActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_newCustomerBTNActionPerformed
+
+    private void existingCustomerBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_existingCustomerBTNActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_existingCustomerBTNActionPerformed
+
+    private void cdSubmitBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cdSubmitBTNActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cdSubmitBTNActionPerformed
+
+    private void cdClearBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cdClearBTNActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cdClearBTNActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(mainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(mainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(mainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(mainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new mainFrame().setVisible(true);
+            }
+        });
     }
 
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        System.out.println(e.getID());
-    }
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel NewCustomerPanel;
+    private javax.swing.JFormattedTextField cdBirthField;
+    private javax.swing.JTextField cdCityField;
+    private javax.swing.JButton cdClearBTN;
+    private javax.swing.JTextField cdCountryField;
+    private javax.swing.JTextField cdEmailField;
+    private javax.swing.JTextField cdFirstNameField;
+    private javax.swing.JTextField cdLastNameField;
+    private javax.swing.JFormattedTextField cdPhoneField;
+    private javax.swing.JTextField cdStateField;
+    private javax.swing.JTextField cdStreetField;
+    private javax.swing.JButton cdSubmitBTN;
+    private javax.swing.JLabel cdTitleLabel;
+    private javax.swing.JPanel customerDisplayPanel;
+    private javax.swing.JPanel ecSearchByNamePanel;
+    private javax.swing.JPanel ecSearchByNumberPanel;
+    private javax.swing.JButton ecSearchNameBTN;
+    private javax.swing.JButton ecSearchNumberBTN;
+    private javax.swing.JPanel emailPanel;
+    private javax.swing.JTextField employeeIDField;
+    private javax.swing.JFormattedTextField erCheckInField;
+    private javax.swing.JTextField erFirstNameField;
+    private javax.swing.JTextField erLastNameField;
+    private javax.swing.JTextField erNumberField;
+    private javax.swing.JLabel erTitleLabel;
+    private javax.swing.JButton existingCustomerBTN;
+    private javax.swing.JPanel existingReservationPanel;
+    private javax.swing.JPanel finalizeReservationPanel;
+    private javax.swing.JButton frCancelBTN;
+    private javax.swing.JTextField frCheckInField;
+    private javax.swing.JTextField frCheckOutField;
+    private javax.swing.JTextField frCostField;
+    private javax.swing.JButton frFinalizeBTN;
+    private javax.swing.JTextField frFirstNameField;
+    private javax.swing.JTextField frGuestsField;
+    private javax.swing.JTextField frLastNameField;
+    private javax.swing.JTextField frPhoneField;
+    private javax.swing.JTextField frResNumField;
+    private javax.swing.JTextField frRoomNumbersField;
+    private javax.swing.JTextField frRoomTypeField;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JLabel loginLabel;
+    private javax.swing.JPanel loginPanel;
+    private javax.swing.JButton logoutButton;
+    private javax.swing.JPanel mainCustomerPanel;
+    private javax.swing.JPanel mainPanel;
+    private javax.swing.JPanel mainReservationPanel;
+    private javax.swing.JPanel modifyReservationPanel;
+    private javax.swing.JTextField mrCheckInField;
+    private javax.swing.JTextField mrCheckOutField;
+    private javax.swing.JTextField mrCostField;
+    private javax.swing.JButton mrDeleteBTN;
+    private javax.swing.JButton mrExistingReservationBTN;
+    private javax.swing.JTextField mrFNameField;
+    private javax.swing.JTextField mrGuestsField;
+    private javax.swing.JTextField mrLNameField;
+    private javax.swing.JButton mrModifyBTN;
+    private javax.swing.JButton mrNewReservationBTN;
+    private javax.swing.JTextField mrPhoneField;
+    private javax.swing.JTextField mrReservationNumberField;
+    private javax.swing.JTextField mrRoomNumbersField;
+    private javax.swing.JTextField mrRoomTypeField;
+    private javax.swing.JPanel namePanel;
+    private javax.swing.JFormattedTextField ncBirthField;
+    private javax.swing.JTextField ncCityField;
+    private javax.swing.JButton ncClearButton;
+    private javax.swing.JButton ncClearButton2;
+    private javax.swing.JTextField ncCountryField;
+    private javax.swing.JTextField ncEmailField;
+    private javax.swing.JTextField ncFirstNameField;
+    private javax.swing.JTextField ncLastNameField;
+    private javax.swing.JFormattedTextField ncPhoneField;
+    private javax.swing.JTextField ncStateField;
+    private javax.swing.JTextField ncStreetField;
+    private javax.swing.JButton ncSubmitBTN;
+    private javax.swing.JButton ncSubmitBTN2;
+    private javax.swing.JLabel ncTitleLabel;
+    private javax.swing.JButton newCustomerBTN;
+    private javax.swing.JPanel newReservationPanel;
+    private javax.swing.JFormattedTextField nrCheckInField;
+    private javax.swing.JFormattedTextField nrCheckOutField;
+    private javax.swing.JTextField nrGuestField;
+    private javax.swing.JTextField nrRoomsField;
+    private javax.swing.JLabel nrTitleLabel;
+    private javax.swing.JPasswordField passwordField;
+    private javax.swing.JPanel phonePanel;
+    private javax.swing.JButton returnCustomerBTN;
+    private javax.swing.JComboBox<String> roomTypeComboBox;
+    private javax.swing.JTextField searchCustomerEmailField;
+    private javax.swing.JTextField searchCustomerFirstNameField;
+    private javax.swing.JTextField searchCustomerLastNameField;
+    private javax.swing.JPanel searchCustomerPanel;
+    private javax.swing.JFormattedTextField searchCustomerPhoneField;
+    private javax.swing.JButton searchEmailBTN;
+    private javax.swing.JButton searchNameBTN;
+    private javax.swing.JButton searchPhoneBTN;
+    private javax.swing.JButton validateCredentialsBTN;
+    // End of variables declaration//GEN-END:variables
 }
-    
-
-
-

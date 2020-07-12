@@ -46,6 +46,10 @@ class RoomManager {
         availableRooms = new ArrayList<>();
     }
     
+    public RoomManager(Database dbs){
+        dBase = dbs;
+    }
+    
     /**
      * Created By Emmanuel Girin 6/25
      * Query Database Room Records to see if number and type of rooms are available
@@ -157,9 +161,9 @@ class RoomManager {
      * @param roomID
      * @throws databaseLookUpException 
      */
-    static Room lookUpRoom(int roomID, Database dbs) throws SQLException, DatabaseException {
+    public Room lookUpRoom(int roomID) throws SQLException, DatabaseException {
         //open connection to database
-        dbs.connectDatabase();
+        dBase.connectDatabase();
         
         //Initialize to null
         Room r = null;
@@ -171,7 +175,7 @@ class RoomManager {
                       "'";    
         
         //Query database, which returns a result set
-        ResultSet rs = dbs.queryDatabase(sql);
+        ResultSet rs = dBase.queryDatabase(sql);
         
         //if rows are returned plug data into an array and create customer object
         if(rs.isBeforeFirst()){
@@ -197,7 +201,7 @@ class RoomManager {
         }
         
         
-        dbs.closeConnection();
+        dBase.closeConnection();
         
         return r;
     }

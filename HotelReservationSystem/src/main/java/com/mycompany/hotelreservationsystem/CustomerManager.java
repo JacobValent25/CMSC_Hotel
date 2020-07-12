@@ -32,6 +32,11 @@ class CustomerManager {
         dBase = dbs;
     }
     
+    
+    public Customer getCustomer(){
+        return currentCustomer;
+    }
+    
     /**
      * Created by Emmanuel Girin 6/25 - basic structure
      * Modified by Emmanuel G 7/6 added body of method
@@ -48,29 +53,47 @@ class CustomerManager {
         //Attempt to open connection to database
         dBase.connectDatabase();
         
-        //create Query String from array
-        String sql = "INSERT INTO customerrecord (firstName, lastName, streetAddress, " +
-                 "city, state, country, phone, email) " + 
-                 " VALUES (";
-        for(int i = 0; i < customerData.length; i++){
-            //add data values from array seperated by comma
-            if (i < (customerData.length - 1))
-                sql += customerData[i] + ", ";
-            //for last value add closing ')'
-            else
-                sql += customerData[i] + ")";
-        }
+      
+            //create Query String from array
+            String sql = "INSERT INTO customerrecords (firstName, lastName, streetAddress, " +
+                     "city, state, country, phone, email, DOB) " + 
+                     " VALUES (";
+            for(int i = 1; i < customerData.length; i++){
+                //add data values from array seperated by comma
+                if (i < (customerData.length - 1))
+                    sql += "'"+ customerData[i] + "', ";
+                //for last value add closing ')'
+                else
+                    sql += "'" + customerData[i] + "')";
+            }
+
         
-        //Attempt to Insert Data into Table
-        dBase.insertData(sql);
+        try{
+            //Attempt to Insert Data into Table
+            dBase.insertData(sql);
+        }
+        catch(SQLException ex){
+            throw new SQLException(ex);
+        }
         
         
         //Perform lookup of Customer ID on newly created Customer
         sql = "SELECT customerID FROM customerrecords WHERE phone = '" + 
-                currentCustomer.getPhone() + "'";
+                currentCustomer.getPhone() + "' AND DOB = '" + 
+                currentCustomer.getDateOfBirth() + "'";
         
-        ResultSet rs = dBase.queryDatabase(sql);
-        currentCustomer.setCustomerID(rs.getInt("customerID"));
+
+        try{
+            ResultSet rs;
+            rs = dBase.queryDatabase(sql);
+            rs.next();
+            currentCustomer.setCustomerID(rs.getInt("customerID"));
+        }
+        catch(SQLException ex){
+            throw new SQLException(ex);
+        }
+        
+        
         
         //Attempt to close Connection
         dBase.closeConnection();
@@ -106,14 +129,14 @@ class CustomerManager {
                 rs.next();
                 
                 //build data array
-                String[] custData = new String[9];
-                custData[0] = rs.getString("ID");
+                String[] custData = new String[10];
+                custData[0] = rs.getString("customerID");
                 custData[1] = rs.getString("firstName");
                 custData[2] = rs.getString("lastName");
-                custData[3] = rs.getString("Street");
-                custData[4] = rs.getString("City");
-                custData[5] = rs.getString("State");
-                custData[6] = rs.getString("Country");
+                custData[3] = rs.getString("streetAddress");
+                custData[4] = rs.getString("city");
+                custData[5] = rs.getString("state");
+                custData[6] = rs.getString("country");
                 custData[7] = rs.getString("phone");
                 custData[8] = rs.getString("email");
                 custData[9] = rs.getString("DOB");
@@ -159,14 +182,14 @@ class CustomerManager {
                 rs.next();
                 
                 //build data array
-                String[] custData = new String[9];
-                custData[0] = rs.getString("ID");
+                String[] custData = new String[10];
+                custData[0] = rs.getString("customerID");
                 custData[1] = rs.getString("firstName");
                 custData[2] = rs.getString("lastName");
-                custData[3] = rs.getString("Street");
-                custData[4] = rs.getString("City");
-                custData[5] = rs.getString("State");
-                custData[6] = rs.getString("Country");
+                custData[3] = rs.getString("streetAddress");
+                custData[4] = rs.getString("city");
+                custData[5] = rs.getString("state");
+                custData[6] = rs.getString("country");
                 custData[7] = rs.getString("phone");
                 custData[8] = rs.getString("email");
                 custData[9] = rs.getString("DOB");
@@ -191,7 +214,7 @@ class CustomerManager {
      * @return Default is false, true if look up is found
      * 
      */
-    boolean lookUpCustomerByName(String email) throws SQLException{
+    boolean lookUpCustomerByEmail(String email) throws SQLException{
         boolean dataFound = false;
         
         //open connection to database
@@ -200,7 +223,7 @@ class CustomerManager {
         //create Query String from parameters
         String sql = "SElECT * " +
                       "FROM customerrecords " +
-                      "WHERE phone = '" + email + "'";
+                      "WHERE email = '" + email + "'";
         
         //Query database, which returns a result set
         ResultSet rs = dBase.queryDatabase(sql);
@@ -211,14 +234,14 @@ class CustomerManager {
                 rs.next();
                 
                 //build data array
-                String[] custData = new String[9];
-                custData[0] = rs.getString("ID");
+                String[] custData = new String[10];
+                custData[0] = rs.getString("customerID");
                 custData[1] = rs.getString("firstName");
                 custData[2] = rs.getString("lastName");
-                custData[3] = rs.getString("Street");
-                custData[4] = rs.getString("City");
-                custData[5] = rs.getString("State");
-                custData[6] = rs.getString("Country");
+                custData[3] = rs.getString("streetAddress");
+                custData[4] = rs.getString("city");
+                custData[5] = rs.getString("state");
+                custData[6] = rs.getString("country");
                 custData[7] = rs.getString("phone");
                 custData[8] = rs.getString("email");
                 custData[9] = rs.getString("DOB");

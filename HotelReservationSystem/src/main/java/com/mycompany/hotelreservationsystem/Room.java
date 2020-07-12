@@ -59,6 +59,15 @@ public class Room {
         nightlyPrice = Integer.parseInt(roomData[4]);
     }
 
+    public Room() {
+           hotelName = "default";
+           room_Number = -1;
+           roomType = -1;
+           roomID = -1;
+           nightlyPrice = 0;
+           
+    }
+
     
     /**
      * Created by Emmanuel Girin 6/27
@@ -86,6 +95,24 @@ public class Room {
 
     public int getRoomType() {
         return roomType;
+    }
+    
+    public String getTypeAsString() {
+        String str;
+        switch (roomType) {
+                case 1:
+                    str = "Single";
+                    break;
+                case 2:
+                    str = "Double";
+                    break;
+                case 3:
+                    str = "King";
+                    break;
+                default:
+                    str = "Suite";     
+        }
+        return str;
     }
 
     public double getNightlyPrice() {

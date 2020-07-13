@@ -18,7 +18,7 @@ import java.sql.*;
 public class Database {  
    
     //DBC driver name and database URL
-    static final String driver = "com.mysql.cj.jdbc.Driver"; 
+    static final String driver = "com.mysql.jdbc.Driver"; 
     static final String url = "jdbc:mysql://localhost:3306/HotelManager";
 
     //Credentials

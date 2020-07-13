@@ -203,6 +203,7 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
         //Error needs Modification to display message to user
         } catch (ClassNotFoundException ex) {
             displayMessageToUser("Database Connection Error: ");
+            displayMessageToUser(ex.getMessage());
             Logger.getLogger(HotelReservationProgram.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//end method

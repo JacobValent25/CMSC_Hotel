@@ -108,7 +108,7 @@ class ReservationManager {
         dBase.connectDatabase();
         
         //create Query String from reservation Object
-        String sql = "INSERT INTO reservationRecord"+ 
+        String sql = "INSERT INTO reservationrecords"+ 
                     " (customerID, roomsBookedByID, checkin, checkout, price, numGuests, numRooms)" +
                      " VALUES ('" + currentReservation.getCustomerID() +
                         "', '" + currentReservation.getRoomIDs() + "', '" +
@@ -123,10 +123,10 @@ class ReservationManager {
         dBase.insertData(sql);
         
                 //Lookup ReservationID key from newly created table
-        sql = "SELECT FROM reservationrecords" +
-              "WHERE customerID = '" + currentReservation.getCustomerID() + 
-              "' AND checkin = CAST('" + currentReservation.getCheckIn().toString() 
-                + "' AS DateTime)";
+        sql = "SElECT * " +
+                      "FROM reservationrecords " +
+                      "WHERE customerID = '" + currentReservation.getCustomerID() + 
+                      "' AND checkin = " + currentReservation.getCheckIn();
         
         System.out.println(sql);
         

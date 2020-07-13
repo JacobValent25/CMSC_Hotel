@@ -4,10 +4,7 @@ CREATE DATABASE IF NOT EXISTS hotelmanager;
 
 USE hotelmanager;
 
--- Create user hotel employee with default password set to password
-CREATE USER IF NOT EXISTS 'hotelemployee'@'localhost' IDENTIFIED BY 'password';
-GRANT SELECT, INSERT, DELETE ON hotelManager.* TO hotelemployee@'localhost';
-FLUSH PRIVILEGES;
+
 
 -- MySQL dump 10.13  Distrib 8.0.20, for Win64 (x86_64)
 --
@@ -138,6 +135,11 @@ CREATE TABLE `userrecords` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
+-- Create user hotel employee with default password set to password
+CREATE USER IF NOT EXISTS 'hotelemployee'@'localhost' IDENTIFIED BY 'password';
+GRANT SELECT, INSERT, DELETE ON hotelManager.* TO hotelemployee@'localhost';
+FLUSH PRIVILEGES;
+
 -- OPTIONAL Add Data for Testing
 -- USER RECORDS
 INSERT INTO `userRecords` VALUES 
@@ -216,5 +218,6 @@ select * from customerRecords;
 select * from roomRecords;
 select * from reservationrecords;
 select * from roomBookings;
+
 
 -- Dump completed on 2020-07-12 23:18:30

@@ -56,14 +56,14 @@ public class Room {
                 throw new DatabaseException("Error: Invalid Data in Database");
         } 
         
-        nightlyPrice = Integer.parseInt(roomData[4]);
+        nightlyPrice = Double.parseDouble(roomData[4]);
     }
 
     public Room() {
+           roomID = -1;
            hotelName = "default";
            room_Number = -1;
            roomType = -1;
-           roomID = -1;
            nightlyPrice = 0;
            
     }

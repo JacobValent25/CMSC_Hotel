@@ -9,6 +9,7 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 
 /**
  *
@@ -49,23 +50,29 @@ class ReservationManager {
      */
     void createReservation(int custID, Date checkIn, Date checkOut, int numGuests, int[] roomIDs) throws SQLException, DatabaseException{
         
+        System.out.println(Arrays.toString(roomIDs));
+        System.out.println("ID LENGTH in createReservation: " +  roomIDs.length);
         //find out total cost of rooms
         double totalPrice = 0;
         long totalNights = ChronoUnit.DAYS.between(checkIn.toLocalDate(), checkOut.toLocalDate());
+        System.out.println("" + totalNights);
+        if(totalNights <= 0){
+            throw new SQLException("Check Out Date must be greater than Check in Date");
+        }
         String roomIDstr = "";
         RoomManager rmgr = new RoomManager(dBase);
         //get cost of each room
-        for(int i : roomIDs){
+        for(int i = 0; i< roomIDs.length; i++){
             //add cost of each room
             
             totalPrice += rmgr.lookUpRoom(roomIDs[i]).getNightlyPrice();
             
             //build str of room IDs separated by , to pass to reservation
-            if(i < (roomIDs.length -1)) {
-                roomIDstr += roomIDs[i] + ", ";
+            if(i == (roomIDs.length -1)) {
+                roomIDstr += roomIDs[i];
                 //for last element only add the element
             } else {
-                roomIDstr += roomIDs[i];
+                roomIDstr += roomIDs[i] + ", ";
             }
         }
         
@@ -120,6 +127,8 @@ class ReservationManager {
               "WHERE customerID = '" + currentReservation.getCustomerID() + 
               "' AND checkin = CAST('" + currentReservation.getCheckIn().toString() 
                 + "' AS DateTime)";
+        
+        System.out.println(sql);
         
         ResultSet rs;
         
@@ -208,10 +217,12 @@ class ReservationManager {
         
         //create Query String from parameters
         String sql = "SElECT * " +
-                      "From reservationRecords " +
+                      "From reservationrecords " +
                       "WHERE customerID = '" + customerID + 
                       "' AND checkin = CAST('" + checkInDate.toString() 
-                      + "' AS DateTime";    
+                      + "' AS DateTime)";
+        
+        System.out.println(sql);
         
         //Query database, which returns a result set
         ResultSet rs = dBase.queryDatabase(sql);
@@ -260,8 +271,10 @@ class ReservationManager {
         
         //create Query String from parameters
         String sql = "SElECT * " +
-                      "From reservationRecords " +
+                      "From reservationrecords " +
                       "WHERE reservationID = '" + reservationID + "'";
+        
+        System.out.println(sql);
         
         //Query database, which returns a result set
         ResultSet rs = dBase.queryDatabase(sql);

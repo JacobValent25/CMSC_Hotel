@@ -59,7 +59,7 @@ class RoomManager {
      * @throws unavailableReservationsException 
      */
     boolean searchAvailableRooms() throws SQLException, Exception {
-         boolean dataFound = false;
+        boolean dataFound = false;
         //open connection to database
         dBase.connectDatabase();
         
@@ -85,7 +85,7 @@ class RoomManager {
             sql = "SELECT * " +
             " FROM roomRecords AS r" +
             " WHERE r.roomID NOT IN(" +
-            "SELECT b.rooomID " +
+            "SELECT b.roomID " +
             " FROM roomBookings AS b" +
             " WHERE b.checkIn <= CAST('" + checkIn.toString() + 
             " ' AS DateTime)" +
@@ -99,7 +99,7 @@ class RoomManager {
             " FROM roomRecords AS r" +
             " WHERE r.RoomType = '" + roomType + "' AND" +
             " r.roomID NOT IN(" +
-            " SELECT b.rooomID " +
+            " SELECT b.roomID " +
             " FROM roomBookings AS b" +
             " WHERE b.checkIn <= CAST('" + checkIn.toString() + 
             " ' AS DateTime)" +
@@ -109,13 +109,13 @@ class RoomManager {
         }
         
             
+        System.out.println(sql);
         
-
-        //Query database, which returns a result set
-        ResultSet rs = dBase.queryDatabase(sql);
-        
-        //if rows are returned plug data into an array and create customer object
-        if(rs.isBeforeFirst()){
+        try{
+            //Query database, which returns a result set
+            ResultSet rs = dBase.queryDatabase(sql);
+            //if rows are returned plug data into an array and create customer object
+            if(rs.isBeforeFirst()){
                 int numRowsReturned = 0;
                 
                 Room r;
@@ -128,8 +128,8 @@ class RoomManager {
                     //count rooms returned
                     numRowsReturned++;
                     roomData[0] = rs.getString("roomID");
-                    roomData[1] = rs.getString("hotelName");
                     roomData[2] = rs.getString("roomNumber");
+                    roomData[1] = rs.getString("hotelName");
                     roomData[3] = rs.getString("roomType");
                     roomData[4] = rs.getString("price");
                     
@@ -138,6 +138,7 @@ class RoomManager {
                     
                     //add it to list
                     availableRooms.add(r);
+                    System.out.println("Added Room to Available ROoms");
                 }
                 
                 
@@ -146,7 +147,13 @@ class RoomManager {
                     //set Flag to True
                     dataFound = true;
                 }
+            }
         }
+        catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+        
+        System.out.println("# of Rooms Added: " + availableRooms.size());
         
         dBase.closeConnection();
         
@@ -170,9 +177,11 @@ class RoomManager {
         
         //create Query String from parameters
         String sql = "SElECT * " +
-                      "From roomRecords " +
+                      "From roomrecords " +
                       "WHERE roomID = '" + roomID + 
                       "'";    
+        
+        System.out.println(sql);
         
         //Query database, which returns a result set
         ResultSet rs = dBase.queryDatabase(sql);
@@ -195,6 +204,8 @@ class RoomManager {
             
             //create room Object
             r = new Room(roomData);  
+            
+            System.out.println(r.toString());
             
         }else {
             throw new DatabaseException("Lookup by Room ID Failed");
@@ -221,16 +232,23 @@ class RoomManager {
      * adds the room IDs in an array and returns that array
      * @return int array of room IDs
      */
-    int[] getSelectedRoomIDs(){
+    int[] getSelectedRoomIDs() throws DatabaseException{
         Room r;
+        System.out.println("Number of Rooms needed: " + numRoomsNeeded);
         int[] selectedRoomIDs = new int[numRoomsNeeded];
         
-        //Return an Array of size rooms Needed of the first available rooms
-        for(int i : selectedRoomIDs){
-            r = availableRooms.get(i);
-            selectedRoomIDs[i] = r.getRoomID();
+        if(numRoomsNeeded <= availableRooms.size()){
+            //Return an Array of size rooms Needed of the first available rooms
+            for(int i = 0; i < numRoomsNeeded ; i++){
+                r = availableRooms.get(i);
+                System.out.println("Room: " + r.toString());
+                System.out.println(i);
+                selectedRoomIDs[i] = r.getRoomID();
+            }
+            return selectedRoomIDs;
         }
-        return selectedRoomIDs;
+        else
+            throw new DatabaseException("Not Enough Rooms");
     }
     
     

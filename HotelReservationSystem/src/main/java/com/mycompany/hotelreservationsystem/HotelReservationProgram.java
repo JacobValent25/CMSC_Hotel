@@ -8,7 +8,9 @@ package com.mycompany.hotelreservationsystem;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
@@ -398,7 +400,13 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
      * Displays Existing Customer Look up Screen
      * @param evt 
      */
-    private void displayExistingCustomer() {                                                    
+    private void displayExistingCustomer() {
+        //set all textfields to blank if they have data in them
+        searchCustomerEmailField.setText("");
+        searchCustomerFirstNameField.setText("");
+        searchCustomerLastNameField.setText("");
+        searchCustomerPhoneField.setText("");
+        
         //show existing customer screen
         cl.show(mainPanel, "card3");
         
@@ -427,10 +435,10 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
     
     private void displayExistingReservation(){
         //clear data
-        erCheckInField.setText("");
+        erCheckInField.setText("0001-01-01");
         erFirstNameField.setText("");
         erLastNameField.setText("");
-        erNumberField.setText("");
+        erNumberField.setText("000-000-0000");
         
         //display Panel
         cl.show(mainPanel, "card7");
@@ -562,43 +570,99 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
         Reservation r = resMGR.getCurrentReservation();
         Customer c = custMGR.getCustomer();
         
-        int[] roomIDs = roomMGR.getSelectedRoomIDs();
-        String roomNumbers = "";
-        String roomTypes = "";
-        Room room = new Room();
+        System.out.println(r.toString());
+        System.out.println(c.toString());
+       
+        try {
+            int[] roomIDs = roomMGR.getSelectedRoomIDs();
+            int j = roomIDs.length;
+            System.out.println(Arrays.toString(roomIDs));
+            System.out.println(roomIDs.length);
+ 
+            String roomNumbers = "";
+            String roomTypes = "";
+
+            for (int i = 0; i < j; i++){
+                try {
+                    System.out.println(roomIDs.length);
+                    Room room = roomMGR.lookUpRoom(roomIDs[i]);
+                    System.out.println(room.toString());
+               
+                if(i == (j-1)){
+                    roomNumbers += room.getRoomID();
+                    roomTypes += room.getTypeAsString();
+                }
+                else{
+                    roomNumbers += room.getRoomID() + ", ";
+                    roomTypes += room.getTypeAsString() + ", ";
+                    
+                }
+                } catch (SQLException | DatabaseException ex) {
+                   Logger.getLogger(HotelReservationProgram.class.getName()).log(Level.SEVERE, null, ex);
+                   displayMessageToUser(ex.getMessage());
+                   System.out.println(ex.getMessage());
+                   
+                }
+            }
+
+            //display data to panel
+            frCheckInField.setText(r.getCheckIn().toString());
+            frCheckOutField.setText(r.getCheckOut().toString());
+            frCostField.setText("$" + String.format("%.2f", r.getTotalCost()));
+            frResNumField.setText("To be Determined");
+            frRoomNumbersField.setText(roomNumbers);
+            frRoomTypeField.setText(roomTypes);
+            frPhoneField.setText(c.getPhone());
+            frFirstNameField.setText(c.getFirstName());
+            frLastNameField.setText(c.getLastName());
+            frGuestsField.setText("" + r.getNumOfGuests());
+            
+            //display Finalize Reservation
+            cl.show(mainPanel, "card9");
+            
         
-        for (int i = 0; i < roomIDs.length; i++){
-            try {
-                room = roomMGR.lookUpRoom(roomIDs[i]);
-            } catch (SQLException | DatabaseException ex) {
-               displayMessageToUser("ERROR: SQL Error Try Again");
-               System.out.println(ex.getMessage());
-            }
-            if(i < (roomIDs.length-1)){
-                roomNumbers += room.getRoomID() + ", ";
-                roomTypes += room.getTypeAsString() + ", ";
-            }
-            else{
-                roomNumbers += room.getRoomID();
-                roomTypes += room.getTypeAsString();
-            }
+        } catch (DatabaseException ex) {
+            Logger.getLogger(HotelReservationProgram.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        //display data to panel
-        frCheckInField.setText(r.getCheckIn().toString());
-        frCheckOutField.setText(r.getCheckOut().toString());
-        frCostField.setText("" + r.getTotalCost());
-        frResNumField.setText("" + r.getReservationID());
-        frRoomNumbersField.setText(roomNumbers);
-        frRoomTypeField.setText(roomTypes);
-        frPhoneField.setText(c.getPhone());
-        frFirstNameField.setText(c.getFirstName());
-        frLastNameField.setText(c.getLastName());
-        frGuestsField.setText("" + r.getNumOfGuests());
+
     }
     
-    private void finalizeReservation() {
-        ;
+    private void finalizeReservation(){
+        try {
+            resMGR.finalizeReservation(roomMGR.getSelectedRoomIDs());
+        } catch (DatabaseException | SQLException ex) {
+            displayMessageToUser("Error: Finalizing Reservation");
+            System.out.println(ex.getMessage());
+        }
+        //Set Reservation ID
+        frResNumField.setText("" + resMGR.getCurrentReservation().getReservationID());
+        
+        frFinalizeBTN.setEnabled(false);
+        frCancelBTN.setEnabled(false);
+        
+        displayMessageToUser("Reservation Succesfully Created");
+        displayMainReservation();
+    }
+    
+    private void displayModifyReservation() {
+        Reservation r = resMGR.getCurrentReservation();
+        Customer c = custMGR.getCustomer();
+        r.getRoomIDs();
+        
+        
+        mrCheckInField.setText(r.getCheckIn().toString());
+        mrCheckOutField.setText(r.getCheckOut().toString());
+        mrCostField.setText("$" + String.format("%.2f", r.getTotalCost()));
+        mrReservationNumberField.setText("" + r.getReservationID());
+        mrRoomNumbersField.setText(r.getRoomIDs());
+        mrRoomTypeField.setText("ANY");
+        mrPhoneField.setText(c.getPhone());
+        mrFNameField.setText(c.getFirstName());
+        mrLNameField.setText(c.getLastName());
+        mrGuestsField.setText("" + r.getNumOfGuests());
+        
+        cl.show(mainPanel, "card8");
+    
     }
 
 
@@ -1144,7 +1208,7 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 //display Existing Reservation Panel
-                cl.show(mainPanel, "card7");
+                displayNewReservation();
             }
         });
 
@@ -1174,18 +1238,32 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
                     int prefType = roomTypeComboBox.getSelectedIndex();
                     System.out.println(roomTypeComboBox.getSelectedIndex());
                     roomMGR = new RoomManager(dbase, checkIn, checkOut, prefType, numRooms);
-                }
+             
                 
-                try {
-                    roomMGR.searchAvailableRooms();
-                } catch (Exception ex) {
-                    displayMessageToUser("Error: SQL ");
-                    System.out.println(ex.getMessage());
+                    try {
+                        if(roomMGR.searchAvailableRooms()){
+                            displayMessageToUser("Rooms Available!");
+                            int customerID = custMGR.getCustomer().getCustomerID();
+                            Date checkIn1 = Date.valueOf(nrCheckInField.getText());
+                            Date checkOut2 = Date.valueOf(nrCheckOutField.getText());
+                            int numGuests = Integer.parseInt(nrGuestField.getText());
+
+                            System.out.println("Customer ID " + customerID + " Dates " + checkIn.toString() + checkOut.toString() + " Guests: " + numGuests);
+
+                            //create new Reservation
+                            resMGR.createReservation(customerID, checkIn1, checkOut2, numGuests, roomMGR.getSelectedRoomIDs());
+
+                            //display Existing Reservation Panel
+                            displayReservationDetails();
+                        };
+                    } catch (Exception ex) {
+                        displayMessageToUser("Error: SQL " + ex.getMessage());
+                        System.out.println(ex.getMessage());
+                    }
                 }
-                        
-                    
-                //display Existing Reservation Panel
-                displayReservationDetails();
+                else
+                    displayMessageToUser("Fill out Check in and Check Out Dates");
+                
             }
         });
 
@@ -1318,9 +1396,46 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
 
         erSearchNameBTN.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         erSearchNameBTN.setText("Search Name");
+        erSearchNameBTN.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                try {
+                    Date d = Date.valueOf(erCheckInField.getText());
+                    if(resMGR.lookUpByCustomer(custMGR.getCustomer().getCustomerID(), d)){
+                        displayModifyReservation();
+                    }
+                    else
+                        displayMessageToUser("Reservation Look up did not return results");
+                } catch (SQLException ex) {
+                    displayMessageToUser("Error: SQL ERROR TRY AGAIN!");
+                    System.out.println(ex.getMessage());
+                } catch (IllegalArgumentException ex){
+                    displayMessageToUser("Date is not in correct format");
+                }
+            }
+        });
 
         erSearchNumberBTN.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         erSearchNumberBTN.setText("Search Number");
+        erSearchNumberBTN.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                
+                try {
+                    int i = Integer.parseInt(erNumberField.getText());
+                    if(resMGR.lookUpByID(i)){
+                        displayModifyReservation();
+                    }
+                    else
+                        displayMessageToUser("Reservation Look up did not return results");
+                } catch (SQLException ex ) {
+                    displayMessageToUser("Error: SQL ERROR TRY AGAIN!");
+                    System.out.println(ex.getMessage());
+                }catch (NumberFormatException ex) {
+                    displayMessageToUser("Error: Invalid Reservation ID");
+                }
+            }
+        });
 
         javax.swing.GroupLayout existingReservationPanelLayout = new javax.swing.GroupLayout(existingReservationPanel);
         existingReservationPanel.setLayout(existingReservationPanelLayout);

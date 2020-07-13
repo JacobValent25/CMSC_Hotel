@@ -4,10 +4,7 @@ CREATE DATABASE IF NOT EXISTS hotelmanager;
 
 USE hotelmanager;
 
--- Create user hotel employee with default password set to password
-CREATE USER IF NOT EXISTS 'hotelemployee'@'localhost' IDENTIFIED BY 'password';
-GRANT SELECT, INSERT, DELETE ON hotelManager.* TO hotelemployee@'localhost';
-FLUSH PRIVILEGES;
+
 
 -- MySQL dump 10.13  Distrib 8.0.20, for Win64 (x86_64)
 --
@@ -138,6 +135,11 @@ CREATE TABLE `userrecords` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
+-- Create user hotel employee with default password set to password
+CREATE USER IF NOT EXISTS 'hotelemployee'@'localhost' IDENTIFIED BY 'password';
+GRANT SELECT, INSERT, DELETE ON hotelManager.* TO hotelemployee@'localhost';
+FLUSH PRIVILEGES;
+
 -- OPTIONAL Add Data for Testing
 -- USER RECORDS
 INSERT INTO `userRecords` VALUES 
@@ -165,10 +167,10 @@ INSERT INTO `roomRecords` VALUES
     (7,107,'CMSC HOTEL','Suite',74.5),
     (8,108,'CMSC HOTEL','Suite',74.5),
     (9,201,'CMSC HOTEL','Single',24.5),
-    (10,202,'CMSC HOTEL','Single',24.5),
-    (11,203,'CMSC HOTEL','Single',24.5),
-    (12,204,'CMSC HOTEL','Single',24.5),
-    (13,205,'CMSC HOTEL','Suite',74.5),
+    (10,202,'CMSC HOTEL','Double',55.55),
+    (11,203,'CMSC HOTEL','Double',55.55),
+    (12,204,'CMSC HOTEL','Double',60.55),
+    (13,205,'CMSC HOTEL','Double',50.55),
     (14,206,'CMSC HOTEL','Suite',74.5),
     (15,207,'CMSC HOTEL','Suite',74.5),
     (16,208,'CMSC HOTEL','Suite',74.5),
@@ -183,11 +185,11 @@ INSERT INTO `roomRecords` VALUES
     (25,401,'CMSC HOTEL','Single',24.5),
     (26,402,'CMSC HOTEL','Single',24.5),
     (27,403,'CMSC HOTEL','Single',24.5),
-    (28,404,'CMSC HOTEL','Single',24.5),
-    (29,405,'CMSC HOTEL','Suite',74.5),
-    (30,406,'CMSC HOTEL','Suite',74.5),
-    (31,407,'CMSC HOTEL','Suite',74.5),
-    (32,408,'CMSC HOTEL','Suite',74.5);
+    (28,404,'CMSC HOTEL','King',66.5),
+    (29,405,'CMSC HOTEL','King',66.5),
+    (30,406,'CMSC HOTEL','King',66.5),
+    (31,407,'CMSC HOTEL','King',66.5),
+    (32,408,'CMSC HOTEL','King',66.5);
 
 
 -- Reservation Records
@@ -216,5 +218,6 @@ select * from customerRecords;
 select * from roomRecords;
 select * from reservationrecords;
 select * from roomBookings;
+
 
 -- Dump completed on 2020-07-12 23:18:30

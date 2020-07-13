@@ -43,7 +43,7 @@ public class Room {
             case "Single":
                 roomType = 1;
                 break;
-            case "Double Beds":
+            case "Double":
                 roomType = 2;
                 break;
             case "King":

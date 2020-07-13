@@ -415,6 +415,10 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
     }
     
     private void displayMainReservation(){
+        frFinalizeBTN.setEnabled(true);
+        frCancelBTN.setEnabled(true);
+        
+        
         //create new reservationMGR
         resMGR = new ReservationManager(dbase);
         
@@ -558,9 +562,6 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
             displayMessageToUser("ERROR: Database Error Try Again!");
             System.out.println(ex.getMessage());
         }
-        
-        //Head Back to Main Reservation Screen
-        displayMainReservation();
     }
     
     
@@ -630,18 +631,22 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
     private void finalizeReservation(){
         try {
             resMGR.finalizeReservation(roomMGR.getSelectedRoomIDs());
+            
+            //Set Reservation ID
+            frResNumField.setText("" + resMGR.getCurrentReservation().getReservationID());
+            
+                    
+            frFinalizeBTN.setEnabled(false);
+            frCancelBTN.setEnabled(false);
+            
+            displayMessageToUser("Reservation Succesfully Created");
         } catch (DatabaseException | SQLException ex) {
+            frFinalizeBTN.setEnabled(false);
+            frCancelBTN.setEnabled(true);
             displayMessageToUser("Error: Finalizing Reservation");
             System.out.println(ex.getMessage());
         }
-        //Set Reservation ID
-        frResNumField.setText("" + resMGR.getCurrentReservation().getReservationID());
-        
-        frFinalizeBTN.setEnabled(false);
-        frCancelBTN.setEnabled(false);
-        
-        displayMessageToUser("Reservation Succesfully Created");
-        displayMainReservation();
+            
     }
     
     private void displayModifyReservation() {
@@ -1255,7 +1260,8 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
 
                             //display Existing Reservation Panel
                             displayReservationDetails();
-                        };
+                        } else
+                            displayMessageToUser("No Rooms Found. Try Different Search");
                     } catch (Exception ex) {
                         displayMessageToUser("Error: SQL " + ex.getMessage());
                         System.out.println(ex.getMessage());
@@ -1641,6 +1647,7 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 //Redisplays Panel
                 deleteReservation();
+                displayMainReservation();
             }
         });
         
@@ -1650,6 +1657,7 @@ public class HotelReservationProgram extends JFrame implements ActionListener {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 deleteReservation();
+                displayNewReservation();
                 
             }
         });

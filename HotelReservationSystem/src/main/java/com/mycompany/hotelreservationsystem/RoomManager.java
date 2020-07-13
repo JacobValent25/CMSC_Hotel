@@ -62,7 +62,6 @@ class RoomManager {
         boolean dataFound = false;
         //open connection to database
         dBase.connectDatabase();
-        
         String roomType;
         switch (preferredType){
             case 1: 
@@ -73,6 +72,9 @@ class RoomManager {
                 break;
             case 3:
                 roomType = "King";
+                break;
+            case 4:
+                roomType = "Suite";
                 break;
             default:
                 roomType = "ALL";   
@@ -108,7 +110,7 @@ class RoomManager {
             ;
         }
         
-            
+        System.out.println("Searching for Available Rooms: ");
         System.out.println(sql);
         
         try{
@@ -138,7 +140,6 @@ class RoomManager {
                     
                     //add it to list
                     availableRooms.add(r);
-                    System.out.println("Added Room to Available ROoms");
                 }
                 
                 
@@ -150,10 +151,12 @@ class RoomManager {
             }
         }
         catch(SQLException e){
+            System.out.println("ERROR: IN Search Available Rooms");
             System.out.println(e.getMessage());
         }
         
         System.out.println("# of Rooms Added: " + availableRooms.size());
+        
         
         dBase.closeConnection();
         
@@ -250,6 +253,4 @@ class RoomManager {
         else
             throw new DatabaseException("Not Enough Rooms");
     }
-    
-    
 }

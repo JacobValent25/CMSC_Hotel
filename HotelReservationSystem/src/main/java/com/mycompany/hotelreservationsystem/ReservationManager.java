@@ -95,6 +95,8 @@ class ReservationManager {
         
     }
     
+    
+    
     /**
      * Created by Emmanuel Girin 6/25 - basic structure
      * Modified: 7/7 by EG added body of method to insert into database
@@ -113,56 +115,40 @@ class ReservationManager {
                      " VALUES ('" + currentReservation.getCustomerID() +
                         "', '" + currentReservation.getRoomIDs() + "', '" +
                         currentReservation.getCheckIn() + "', '" +
-                        currentReservation.getCheckOut() + "', '" +
-                        currentReservation.getTotalCost() + "', '" +
-                        currentReservation.getNumOfGuests() + "', '" +
-                        currentReservation.getNumOfRooms() + "')";
+                        currentReservation.getCheckOut() + "', " +
+                        currentReservation.getTotalCost() + ", " +
+                        currentReservation.getNumOfGuests() + ", " +
+                        currentReservation.getNumOfRooms() + ") ;";
 
-        
-        //Attempt to Insert Data into Table
-        dBase.insertData(sql);
-        
-                //Lookup ReservationID key from newly created table
-        sql = "SElECT * " +
-                      "FROM reservationrecords " +
-                      "WHERE customerID = '" + currentReservation.getCustomerID() + 
-                      "' AND checkin = " + currentReservation.getCheckIn();
-        
-        System.out.println(sql);
-        
-        ResultSet rs;
-        
-        //query Database
-        rs = dBase.queryDatabase(sql);
-        
-        //If there are rows set Reservation ID else throw an error
-        if(rs.isBeforeFirst())
-        {
-            rs.next();
-            int i = rs.getInt("reservationID");
-            currentReservation.setReservationID(i);
+       try{
+            //Attempt to Insert Data into Table
+            System.out.println("SQL for Reservation Insert: " + sql);
+            dBase.insertData(sql);
         }
-        else {
-            throw new DatabaseException("Unable to Lookup New Reservation");
+        catch(SQLException ex){
+            System.out.println("Inside try catch for create reservation");
+            throw new SQLException(ex.getMessage());
         }
-        
-        //insert RoomBookings
-        for (int i = 0; i < roomIDs.length; i ++){
-            sql = "INSERT INTO roombookings (roomID, reservationID, checkIn, checkOut)" 
-                    + " VALUES('" + roomIDs[i] +
-                    "', '" + currentReservation.getReservationID() +
-                    "', CAST('" + currentReservation.getCheckIn().toString() 
-                            + "' AS DateTime)" +
-                    ", CAST('" + currentReservation.getCheckOut().toString() 
-                            + "' AS DateTime)";
-
-              dBase.insertData(sql);
-        }
-        
-
         
         //Attempt to close Connection
         dBase.closeConnection();
+        
+        //retrieve Customer
+        try{
+            lookUpByCustomer(currentReservation.getCustomerID(), currentReservation.getCheckIn());
+        }
+        catch (SQLException e){
+            System.out.println("Error Looking up New Reservation");
+            System.out.print(e.getMessage());
+        }
+        try{
+            insertRoomBookings(roomIDs);
+        }
+        catch (SQLException e){
+            System.out.println("Error inserting room bookings");
+            System.out.print(e.getMessage());
+        }
+        
    
     }
     
@@ -314,6 +300,31 @@ class ReservationManager {
      */
     public Reservation getCurrentReservation() {
         return currentReservation;
+    }
+
+    private void insertRoomBookings(int [] roomIDs) throws SQLException {
+                
+        dBase.connectDatabase();
+        
+        String sql = "";
+        //insert RoomBookings
+        for (int i = 0; i < roomIDs.length; i ++){
+            sql = "INSERT INTO roombookings (roomID, reservationID, checkIn, checkOut)" 
+                    + " VALUES('" + roomIDs[i] +
+                    "', '" + currentReservation.getReservationID() +
+                    "', CAST('" + currentReservation.getCheckIn().toString() 
+                            + "' AS DateTime)" +
+                    ", CAST('" + currentReservation.getCheckOut().toString() 
+                            + "' AS DateTime)";
+
+            System.out.println();
+              dBase.insertData(sql);
+        }
+
+
+        
+        //Attempt to close Connection
+        dBase.closeConnection();   
     }
     
     

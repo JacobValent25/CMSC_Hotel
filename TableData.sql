@@ -167,10 +167,10 @@ INSERT INTO `roomRecords` VALUES
     (7,107,'CMSC HOTEL','Suite',74.5),
     (8,108,'CMSC HOTEL','Suite',74.5),
     (9,201,'CMSC HOTEL','Single',24.5),
-    (10,202,'CMSC HOTEL','Single',24.5),
-    (11,203,'CMSC HOTEL','Single',24.5),
-    (12,204,'CMSC HOTEL','Single',24.5),
-    (13,205,'CMSC HOTEL','Suite',74.5),
+    (10,202,'CMSC HOTEL','Double',55.5),
+    (11,203,'CMSC HOTEL','Double',55.5),
+    (12,204,'CMSC HOTEL','Double',60.5),
+    (13,205,'CMSC HOTEL','Double',50.5),
     (14,206,'CMSC HOTEL','Suite',74.5),
     (15,207,'CMSC HOTEL','Suite',74.5),
     (16,208,'CMSC HOTEL','Suite',74.5),
@@ -185,11 +185,11 @@ INSERT INTO `roomRecords` VALUES
     (25,401,'CMSC HOTEL','Single',24.5),
     (26,402,'CMSC HOTEL','Single',24.5),
     (27,403,'CMSC HOTEL','Single',24.5),
-    (28,404,'CMSC HOTEL','Single',24.5),
-    (29,405,'CMSC HOTEL','Suite',74.5),
-    (30,406,'CMSC HOTEL','Suite',74.5),
-    (31,407,'CMSC HOTEL','Suite',74.5),
-    (32,408,'CMSC HOTEL','Suite',74.5);
+    (28,404,'CMSC HOTEL','King',66.5),
+    (29,405,'CMSC HOTEL','King',66.5),
+    (30,406,'CMSC HOTEL','King',66.5),
+    (31,407,'CMSC HOTEL','King',66.5),
+    (32,408,'CMSC HOTEL','King',66.5);
 
 
 -- Reservation Records

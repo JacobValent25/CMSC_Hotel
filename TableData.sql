@@ -140,17 +140,19 @@ CREATE TABLE `userrecords` (
 
 -- OPTIONAL Add Data for Testing
 -- USER RECORDS
-INSERT INTO `userRecords` VALUES (140111,'1455444','John','Candy');
+INSERT INTO `userRecords` VALUES 
+  (140111,'1455444','John','Candy'),
+  ('1','1','John','BarleyCorn');
 
 -- Customer Records
 INSERT INTO `customerRecords` VALUES 
-    (1,'leleo','Joins','street','city','MD','USA','4477558784','test@umuc.edu','1999-01-01' ),
-    (2,'Val','Junior','street','city','MD','USA','44455577789','test2@umuc.edu','1992-04-01'),
-    (3,'Caio','Gran','street','city','MD','USA','7778889994','test3@umuc.edu','1955-01-05'),
-    (4,'Ronald','MT','street','city','MD','USA','7774441112','test3@umuc.edu', '1999-02-01'),
-    (5,'Indi','Ora','street','city','MD','USA','11122233364','test3@umuc.edu', '1999-01-02'),
-    (6,'Pedro','Span','street','city','MD','USA','44477252123','test3@umuc.edu', '1999-01-30'),
-    (7,'Marcos','BR','street','city','MD','USA','78999544565','test3@umuc.edu', '1985-01-01');
+    (1,'leleo','Joins','street','city','MD','USA','447-755-8784','test@umuc.edu','1999-01-01' ),
+    (2,'Val','Junior','street','city','MD','USA','444-555-7789','test2@umuc.edu','1992-04-01'),
+    (3,'Caio','Gran','street','city','MD','USA','777-888-9994','test3@umuc.edu','1955-01-05'),
+    (4,'Ronald','MT','street','city','MD','USA','777-444-1112','test3@umuc.edu', '1999-02-01'),
+    (5,'Indi','Ora','street','city','MD','USA','111-222-3364','test3@umuc.edu', '1999-01-02'),
+    (6,'Pedro','Span','street','city','MD','USA','444-772-2123','test3@umuc.edu', '1999-01-30'),
+    (7,'Marcos','BR','street','city','MD','USA','789-995-4565','test3@umuc.edu', '1985-01-01');
 
 -- Room Records 
 INSERT INTO `roomRecords` VALUES 
